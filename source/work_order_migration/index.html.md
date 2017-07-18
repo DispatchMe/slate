@@ -92,7 +92,7 @@ The biggest change is that Work Orders are now used only to **create and orchest
 }
 ```
 
-The Work Order document contains all of the information blah blah blah
+The Work Order document contains all of the information to create all objects in the Dispatch system needed to handle your workflow. See [Posting a Work Order to Dispatch](#posting-work-order)
 
 attribute | type | notes
 --------- | ---- | -----
@@ -176,7 +176,7 @@ type | `string` | E.g. "work", "fax", "mobile", "home"
 value | `string` | Either the email address or phone number. <br />Phone number must be in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
 preferred | `bool` | If `true`, this phone number or email address will <br />be used to allow this person to log in to the Dispatch system.
 
-# Posting a Work Order to Dispatch
+# Posting a Work Order to Dispatch <a name="posting-work-order"></a>
 
 > Response
 
@@ -384,4 +384,52 @@ Pending new webhooks project.
 
 ## Common "Update" Workflows
 
-TBD after research
+See examples on the right.
+
+> Accept on behalf of Service Provider: If there is no appointment, `PATCH /v3/jobs/:id`
+
+```json
+{
+	"status": "unscheduled"
+}
+```
+
+> Accept on behalf of Service Provider: If there is an appointment, create it, and the job's status will change automatically to "scheduled". `POST /v3/appointments`:
+
+```json
+{
+	"job_id": 123,
+	"time": "ISO8601 Timestamp",
+	"duration": 3600,
+	"status": "scheduled"
+}
+```
+
+> Cancel Work Order: `PATCH /v3/jobs/:id`
+
+```json
+{
+	"status": "canceled"
+}
+```
+
+> Complete Work Order: `PATCH /v3/jobs/:id`
+
+```json
+{
+	"status": "complete"
+}
+```
+
+### Accept on Behalf of Service Provider
+Previously, to accept a job offer on behalf of a service provider, you would `PATCH /v1/organizations/:id/job_offers/:id`.
+
+Now, you just need to change the status of that service provider's job or create an appointment for that job, using the job ID you received back from us when you created the work order.
+
+### Canceling a Work Order
+
+To cancel a work order, just change the status of its job(s) to "canceled".
+
+### Completing a Work Order
+
+If the work was completed outside of Dispatch but you still want to use our survey feature, you can update it in the Dispatch system by just changing the job's status to "complete".
