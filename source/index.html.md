@@ -1,9 +1,8 @@
 ---
-title: API Reference
+title: Dispatch Job Offer -> 
 
 language_tabs:
-  - shell
-  - ruby
+  - go
   - python
   - javascript
 
