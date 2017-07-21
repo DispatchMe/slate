@@ -426,6 +426,8 @@ Previously, to accept a job offer on behalf of a service provider, you would `PA
 
 Now, you just need to change the status of that service provider's job or create an appointment for that job, using the job ID you received back from us when you created the work order.
 
+!!!NEED TO EXPOSE WOGS AND HAVE THEM HIT THAT FOR ACCEPT/REJECT.!!!
+
 ### Canceling a Work Order
 
 To cancel a work order, just change the status of its job(s) to "canceled".
