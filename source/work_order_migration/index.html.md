@@ -114,7 +114,7 @@ city | `string` | required
 state | `enum<string>` | two-character abbreviation for the state. 
 postal_code | `string` | 5-digit US or 6-character Canadian postal code
 timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
-external_ids | `array<string>` | Your system's IDs for the location <br/>See [external ids](#external-ids)
+external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
 
 ## Appointment Window Entity <a name="appointment-window-schema"></a>
 
@@ -153,7 +153,7 @@ attribute | type | notes
 first_name | `string` |
 last_name | `string` |
 company_name | `string` |
-external_ids | `array<string>` | ID(s) for the contact in your system. See [external ids](#external-ids)
+external_id | `string` | ID(s) for the contact in your system. See [external ids](#external-ids)
 primary | `bool` | You must designate a single primary contact (set to `true`) <br/>per work order. This person will be able to log in to the customer  <br/> portal, suggest appointment windows, and provide feedback at <br/>the end of the appointment.
 notes | `string` |
 billing_address | `Location` | Optional billing address for this contact.
