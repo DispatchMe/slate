@@ -863,7 +863,7 @@ status_not_eq | Show jobs that are not in a certain status
 
 `PATCH /v3/jobs/:id`
 
-<aside class="notice">Remember, to move a job from "offered" status, you need to [accept or reject it on behalf of the orgnanization](#accept-reject-behalf) if they cannot do so in our application.</aside>
+<aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
 
 # <a name="organizations"></a> Organizations
 Organizations are the service providers that perform the work.
