@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
-
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+    <title>Dispatch REST API v3</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -16,11 +14,11 @@
   background-color: #272822;
 }
 .highlight .err {
-  color: #151515;
-  background-color: #ac4142;
+  color: #272822;
+  background-color: #f92672;
 }
 .highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
-  color: #505050;
+  color: #75715e;
 }
 .highlight .cp {
   color: #f4bf75;
@@ -29,45 +27,45 @@
   color: #f4bf75;
 }
 .highlight .o, .highlight .ow {
-  color: #d0d0d0;
+  color: #f8f8f2;
 }
 .highlight .p, .highlight .pi {
-  color: #d0d0d0;
+  color: #f8f8f2;
 }
 .highlight .gi {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .gd {
-  color: #ac4142;
+  color: #f92672;
 }
 .highlight .gh {
-  color: #6a9fb5;
-  background-color: #151515;
+  color: #66d9ef;
+  background-color: #272822;
   font-weight: bold;
 }
 .highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
-  color: #aa759f;
+  color: #ae81ff;
 }
 .highlight .kc {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .kt {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .kd {
-  color: #d28445;
+  color: #fd971f;
 }
 .highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .sr {
-  color: #75b5aa;
+  color: #a1efe4;
 }
 .highlight .si {
-  color: #8f5536;
+  color: #cc6633;
 }
 .highlight .se {
-  color: #8f5536;
+  color: #cc6633;
 }
 .highlight .nn {
   color: #f4bf75;
@@ -79,31 +77,31 @@
   color: #f4bf75;
 }
 .highlight .na {
-  color: #6a9fb5;
+  color: #66d9ef;
 }
 .highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
-  color: #90a959;
+  color: #a6e22e;
 }
 .highlight .ss {
-  color: #90a959;
+  color: #a6e22e;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;json&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
-        <img src="images/navbar.png" />
+        <img src="images/navbar.png" alt="Navbar" />
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" />
+      <img src="images/logo.png" alt="Logo" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="json">json</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -112,158 +110,388 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a href="http://www.dispatch.me" target="_blank">Dispatch Website</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        <h1 id="getting-started">Getting Started</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>Welcome to the Dispatch REST API documentation. Our REST API allows you to easily interact with our core business entities to implement your workflow in our platform.</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<h2 id="signing-up">Signing Up</h2>
 
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<p>If you&rsquo;re interested in using our API, please work with your account manager and we&rsquo;ll set you up with your credentials. Don&rsquo;t have an account manager? Provide your information here and we&rsquo;ll get back to you.</p>
+
+<h2 id="dispatch-business-objects">Dispatch Business Objects</h2>
+
+<p>Here&rsquo;s a brief description of our business objects and their role in the Dispatch system.</p>
+
+<table><thead>
+<tr>
+<th>Entity</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><a href="#work-orders">Work Order</a></td>
+<td>A &ldquo;factory&rdquo; object that creates the underlying business objects and handles <a href="#orchestration">orchestration</a>. We recommend using this to handle object creation and the entity-specific endpoints to handle changes and querying. We have plans to make this into a real business object in the near future so you don&rsquo;t have to worry about the underlying objects.</td>
+</tr>
+<tr>
+<td><a href="#jobs">Job</a></td>
+<td>A single body of work for a <a href="#customers">customer</a>, assigned to an <a href="#organization">organization</a>.</td>
+</tr>
+<tr>
+<td><a href="#customers">Customer</a></td>
+<td>A job currently belongs to a single customer, representing the homeowner.</td>
+</tr>
+<tr>
+<td><a href="#organizations">Organization</a></td>
+<td>Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.</td>
+</tr>
+<tr>
+<td><a href="#appointments">Appointment</a></td>
+<td>Scheduled times at which an assigned <a href="#users">user</a> (technician) will perform the work for the job</td>
+</tr>
+<tr>
+<td><a href="#attachments">Attachment</a></td>
+<td>Attachments are notes or photos that you can add to jobs to provide the dispatchers and technicians with additional information. They can also add their own notes via our mobile or desktop application</td>
+</tr>
+<tr>
+<td><a href="#users">User</a></td>
+<td>Users are the users of our application. Currently we have 2 types of users: the <strong>dispatcher</strong> and the <strong>technician</strong>. Users can also have both roles if it makes sense for your use case. We have separate mobile applications for each role, as well as a single desktop web application for dispatchers to manage their workforce from the office.</td>
+</tr>
+<tr>
+<td><a href="#survey-responses">Survey Response</a></td>
+<td>Surveys are sent out to customers when an appointment or job is completed.</td>
+</tr>
+<tr>
+<td><a href="#brands">Brand</a></td>
+<td>You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.</td>
+</tr>
+</tbody></table>
+
+<h2 id="external-ids"><a name="external-ids"></a>External IDs</h2>
+
+<p>To make it easier for you to integrate your existing system with Dispatch, several of our business objects have an attribute called <code class="prettyprint">external_ids</code>. This is an array of strings representing the ID or ID(s) of those objects in your own system. We use those for various purposes, such as:</p>
+
+<ul>
+<li>Identifying existing customers or organizations, instead of creating new ones, so you don&rsquo;t have to look them up before attempting to create</li>
+<li>Allowing you to look up entities using your ID instead of ours.</li>
+</ul>
+
+<p>We do, however, recommend that you store Dispatch&rsquo;s business object ID for your objects somewhere in your system, since our external IDs support is limited.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer token for your account by providing your <strong>public</strong> and <strong>secret</strong> keys that we will provide upon signing up for the platform.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<h2 id="retrieving-a-bearer-token">Retrieving a Bearer Token</h2>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
+<p>Request:</p>
 </blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-<h1 id="kittens">Kittens</h1>
-
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client_credentials"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public_key"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"client_secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret_key"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/oauth/token</code></p>
 
-<p>This endpoint retrieves all kittens.</p>
+<p><strong>These tokens are temporary</strong>, so you will need to be able to handle 401 status codes from our system to retrieve a new token in the event that it is no longer valid.</p>
 
-<h3 id="http-request">HTTP Request</h3>
+<h2 id="refreshing-your-token">Refreshing your Token</h2>
 
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
+<blockquote>
+<p>Request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh_token"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token you received with your original bearer token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/oauth/token</code></p>
+
+<h2 id="access-control-amp-permissions">Access Control &amp; Permissions</h2>
+
+<p>Describe third-party vs first-party, data ownership, etc.</p>
+
+<h2 id="filtering-and-paginating">Filtering and Paginating</h2>
+
+<p>For <code class="prettyprint">GET</code> requests, several endpoints allow you to filter the results based on certain record attributes. These are all provided as nested values on a <code class="prettyprint">filter</code> object within the query string, like so: <code class="prettyprint">?filter[job_id]=123&amp;filter[status]=scheduled</code></p>
+
+<p>For all <code class="prettyprint">GET</code> requests that return multiple records, you can paginate by providing <code class="prettyprint">limit</code> and <code class="prettyprint">offset</code> parameters, like so (the maximum value for <code class="prettyprint">limit</code> is currently 100): <code class="prettyprint">?filter[job_id]=123&amp;filter[status]=scheduled&amp;limit=100&amp;offset=1000</code></p>
+
+<h1 id="attachments"><a name="attachments"></a> Attachments</h1>
+
+<p>Attachments represent notes assigned to <a href="#jobs">jobs</a> in the Dispatch platform. These are useful for providing additional information to the service provider after they have already begun work.</p>
+
+<h2 id="create-an-attachment">Create an Attachment</h2>
+
+<blockquote>
+<p>Request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"entity_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"entity_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Here is the note"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"entity_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"entity_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Here is the note"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/attachments</code></p>
+
+<h2 id="list-attachments">List Attachments</h2>
+
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"entity_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"entity_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Here is a note"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/attachments</code></p>
 
 <h3 id="query-parameters">Query Parameters</h3>
 
 <table><thead>
 <tr>
 <th>Parameter</th>
-<th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>entity_type_eq</td>
+<td>Type of parent object (currently only supported value is &ldquo;Job&rdquo;)</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>entity_id_eq</td>
+<td>ID of the parent object</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+<h3 id="example-view-all-attachments-on-job-123">Example: view all attachments on job #123</h3>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p><code class="prettyprint">GET https://api.dispatch.me/v3/attachments?filter[entity_type_eq]=Job&amp;filter[entity_id_eq]=123</code></p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<h2 id="view-a-single-attachment">View a Single Attachment</h2>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"entity_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"entity_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Here is a note"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p><code class="prettyprint">GET /v3/attachments/:id</code></p>
 
-<p>This endpoint retrieves a specific kitten.</p>
+<h2 id="update-attachment">Update Attachment</h2>
 
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<blockquote>
+<p>Request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New note here"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"attachment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"entity_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Job"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"entity_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New note here"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/attachments/:id</code></p>
 
-<h3 id="http-request">HTTP Request</h3>
+<h2 id="delete-attachment">Delete Attachment</h2>
 
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<p><code class="prettyprint">DELETE /v3/attachments/:id</code></p>
 
-<h3 id="url-parameters">URL Parameters</h3>
+<h1 id="appointments"><a name="appointments"></a> Appointments</h1>
+
+<p>Appointments are scheduled times at which a technician will do work related to a <a href="#jobs">job</a>. Jobs may have zero or more appointments (whether appointments are used depends upon your workflow and the engagement of your service providers on our platform).</p>
+
+<p>Appointments are required to send customers notifications for &ldquo;on my way&rdquo; and &ldquo;appointment scheduled&rdquo;.</p>
+
+<h2 id="appointment-attributes">Appointment Attributes</h2>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>job_id</td>
+<td>int</td>
+<td>ID of the parent job</td>
+</tr>
+<tr>
+<td>time</td>
+<td>string</td>
+<td>ISO8601 timestamp for the appointment&rsquo;s scheduled time</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>int</td>
+<td>duration, in seconds, of the appointment. Defaults to <code class="prettyprint">7200</code> (2 hours)</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>int</td>
+<td>ID of the assigned technician</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>Status of the appointment. See <a href="#appointment-statuses">Appointment Statuses</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="job-statuses"><a name="appointment-statuses"></a>Job Statuses</h2>
+
+<p>Appointments can move freely between any of the supported statuses below. Via our mobile app, technicians can update the status of the appointment according to your workflow.</p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>draft</td>
+<td>A tentative appointment. May be missing information</td>
+</tr>
+<tr>
+<td>scheduled</td>
+<td>The appointment is scheduled</td>
+</tr>
+<tr>
+<td>enroute</td>
+<td>The technician is on the way</td>
+</tr>
+<tr>
+<td>in_progress</td>
+<td>The technician has arrived and has started the work</td>
+</tr>
+<tr>
+<td>complete</td>
+<td>The appointment is finished</td>
+</tr>
+<tr>
+<td>canceled</td>
+<td>The appointment has been canceled</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-an-appointment">Create an Appointment</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">456</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"appointment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">456</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/appointments</code></p>
+
+<h2 id="list-appointments">List Appointments</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"appointments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/appointments</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
 
 <table><thead>
 <tr>
@@ -272,16 +500,1877 @@ Remember — a happy kitten is an authenticated kitten!
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>job_id_eq</td>
+<td>Parent job ID</td>
+</tr>
+<tr>
+<td>job_id_in</td>
+<td>Parent job IDs (separated by comma)</td>
+</tr>
+<tr>
+<td>organization_id_eq</td>
+<td>Parent organization Id</td>
+</tr>
+<tr>
+<td>status_eq</td>
+<td>Search for appointments in a specific status</td>
+</tr>
+<tr>
+<td>status_in</td>
+<td>Specific statuses (separated by comma)</td>
+</tr>
+<tr>
+<td>time_gt</td>
+<td>Show appointments scheduled after the given time (ISO8601 timestamp)</td>
+</tr>
+<tr>
+<td>time_gteq</td>
+<td>Show appointments scheduled on or after the given time (ISO8601 timestamp)</td>
+</tr>
+<tr>
+<td>time_lt</td>
+<td>Show appointments scheduled before the given time (ISO8601 timestamp)</td>
+</tr>
+<tr>
+<td>time_lteq</td>
+<td>Show appointments scheduled on or before the given time (ISO8601 timestamp)</td>
+</tr>
+<tr>
+<td>user_id_eq</td>
+<td>Show appointments assigned to a particular technician</td>
+</tr>
+<tr>
+<td>user_id_in</td>
+<td>Show appointments assigned to technicians (separated by comma)</td>
+</tr>
+<tr>
+<td>user_id_null</td>
+<td>Show appointments that are unassigned (value should be <code class="prettyprint">true</code> here)</td>
+</tr>
+</tbody></table>
+
+<h2 id="view-a-single-appointment">View a Single Appointment</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">456</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/appointments/:id</code></p>
+
+<h2 id="update-appointment">Update Appointment</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-02T00:00:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">7200</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">789</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"appointment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scheduled"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-02T00:00:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">7200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">789</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/appointments/:id</code></p>
+
+<h2 id="delete-appointment">Delete Appointment</h2>
+
+<p><code class="prettyprint">DELETE /v3/appointments/:id</code></p>
+
+<h1 id="brands"><a name="brands"></a> Brands</h1>
+
+<p>Brands represent different brands or divisions within your company, giving you full control over the copy and logo for the mobile and web applications, customer notifications, etc. Logos and job source details fall back to the account level if there is no <code class="prettyprint">brand_id</code> property present on a job.</p>
+
+<h2 id="create-a-brand">Create a Brand</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New Brand"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"logo_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9b553add-62cf-47c0-aec1-6705e395b4da"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/brands</code></p>
+
+<p>For the <code class="prettyprint">logo_token</code> attribute, use the <code class="prettyprint">uid</code> attribute returned when you <a href="#upload-photo">upload your brand logo</a>.</p>
+
+<h2 id="list-brands">List Brands</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"brands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/brands</code></p>
+
+<aside class="notice">
+There are no query parameters available for brands at the moment.
+</aside>
+
+<h2 id="update-brand">Update Brand</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Changed Name"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response
+<code class="prettyprint">json
+{
+  &quot;brand&quot;: {
+    &quot;id&quot;: 1,
+    &quot;name&quot;: &quot;Changed Name&quot;,
+    &quot;logo_token&quot;: &quot;7961914c-7e8f-4012-a316-be00e7b1a40e&quot;,
+    &quot;phone_number&quot;: &quot;+15559876543&quot;
+  }
+}
+</code></p>
+</blockquote>
+
+<p><code class="prettyprint">PATCH /v3/brands/:id</code></p>
+
+<h2 id="delete-brand">Delete Brand</h2>
+
+<aside class="notice">
+Careful! If you delete a brand then all jobs currently within that brand will use your default &ldquo;account-level&rdquo; branding.
+</aside>
+
+<p><code class="prettyprint">DELETE /v3/brands/:id</code></p>
+
+<h1 id="customers"><a name="customers"></a> Customers</h1>
+
+<p>Customers represent the homeowner, landlord or other entity the work is being done for. Customers in Dispatch belong to individual organizations, so if you have multiple organizations doing work for the same customer in your system, there will be multiple instances of that customer in Dispatch. We do this to allow organizations to keep their own notes and make their own updates to customer data without affecting other organizations.</p>
+
+<aside class="notice">
+Note: customers will be automatically created if the `customer` attribute is included as part of the Job object, so you shouldn&rsquo;t have to interact directly with the Customer models unless you are maintaining them separately from jobs.
+</aside>
+
+<h2 id="customer-attributes">Customer Attributes</h2>
+
+<p>Note that currently we support <strong>multiple phone numbers</strong> but only a <strong>single email address</strong> for customers. We have plans to improve this in the near future.</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>organization_id</td>
+<td><code class="prettyprint">int</code></td>
+<td>ID of the parent organization</td>
+</tr>
+<tr>
+<td>first_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>last_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>company_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>notes</td>
+<td><code class="prettyprint">string</code></td>
+<td>Any additional notes about this customer</td>
+</tr>
+<tr>
+<td>email</td>
+<td><code class="prettyprint">string</code></td>
+<td>Email address for the customer. This will be used to send email notifications if they are configured for your account.</td>
+</tr>
+<tr>
+<td>phone_numbers</td>
+<td><code class="prettyprint">array&lt;PhoneNumber&gt;</code></td>
+<td>See below for phone number object attributes</td>
+</tr>
+<tr>
+<td>home_address</td>
+<td><code class="prettyprint">Location</code></td>
+<td>This is used only when creating a new job for this customer in our application. For jobs that come in via our API, the <code class="prettyprint">job.address</code> property is used. See <a href="#location-schema">Location entity schema</a></td>
+</tr>
+<tr>
+<td>billing_address</td>
+<td><code class="prettyprint">Location</code></td>
+<td>See <a href="#location-schema">Location entity schema</a></td>
+</tr>
+<tr>
+<td>external_ids</td>
+<td><code class="prettyprint">array&lt;string&gt;</code></td>
+<td>See <a href="#external-ids">external IDs</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="phone-number-object">Phone Number Object</h3>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>number</td>
+<td><code class="prettyprint">string</code></td>
+<td>Phone number in <a href="https://www.ietf.org/rfc/rfc3966.txt">RFC3966 format</a></td>
+</tr>
+<tr>
+<td>primary</td>
+<td><code class="prettyprint">boolean</code></td>
+<td>Set to <code class="prettyprint">true</code> if you want this number to receive SMS notifications</td>
+</tr>
+<tr>
+<td>type</td>
+<td><code class="prettyprint">string</code></td>
+<td>E.g. &ldquo;Mobile&rdquo;, &ldquo;Work&rdquo;</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-customer">Create a Customer</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer@email.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15559876543"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15559876543"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/customers</code></p>
+
+<p>Note that when you attempt to create a customer, we may find a duplicate of that customer already in our system. In that case, the data you provide will be merged onto the existing customer rather than be used to create a new one. You will receive the existing customer back in the response.</p>
+
+<h2 id="update-a-customer">Update a Customer</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Changed"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15559876543"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Changed"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/customers/:id</code></p>
+
+<h2 id="list-customers">List Customers</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"customers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email_eq</td>
+<td>Find a customer by email</td>
+</tr>
+<tr>
+<td>external_id_contains</td>
+<td>Find a customer with a given external ID</td>
+</tr>
+<tr>
+<td>organization_id_eq</td>
+<td>Find a customer for a specific organization</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-customer">Delete a Customer</h2>
+
+<p><code class="prettyprint">DELETE /v3/customers/:id</code></p>
+
+<h1 id="files-and-photos"><a name="files-photos"></a> Files and Photos</h1>
+
+<p>You can upload photos and other files to share with service providers and customers using our <code class="prettyprint">/v3/datafiles</code> endpoint.</p>
+
+<h2 id="uploading-a-file"><a name="upload-photo"></a>Uploading a file</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>curl -H "Authorization: Bearer &lt;token&gt;" -F file=@test.png https://api.dispatch.me/v3/datafiles
+
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"datafile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"bucket_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-07-19T01:42:48Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.png"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mime_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image/png"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fe9194b3-3cc2-4862-af52-d8b59f7dd062"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST</code> using <code class="prettyprint">Content-Type: multipart/form-data</code> to <code class="prettyprint">/v3/datafiles</code></p>
+
+<h2 id="view-a-file-by-uid">View a file by UID</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 302 Found
+Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
+</code></pre>
+<p><code class="prettyprint">GET /v3/datafiles/:uid</code></p>
+
+<h1 id="jobs"><a name="jobs"></a> Jobs</h1>
+
+<p>Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done. </p>
+
+<h2 id="job-attributes">Job Attributes</h2>
+
+<p>Note that the <code class="prettyprint">organization</code> and <code class="prettyprint">customer</code> nested objects will be ignored if <code class="prettyprint">organization_id</code> or <code class="prettyprint">customer_id</code> are provided, respectively.</p>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>title</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>description</td>
+<td><code class="prettyprint">string</code></td>
+<td>Additional details for the job. Supports <a href="https://daringfireball.net/projects/markdown/syntax">markdown</a></td>
+</tr>
+<tr>
+<td>service_type</td>
+<td><code class="prettyprint">string</code></td>
+<td>Type of service, e.g. &ldquo;plumbing&rdquo;</td>
+</tr>
+<tr>
+<td>external_ids</td>
+<td><code class="prettyprint">array&lt;string&gt;</code></td>
+<td>Your ID(s) for this job. See <a href="#external-ids">external-ids</a></td>
+</tr>
+<tr>
+<td>address</td>
+<td><code class="prettyprint">Location</code></td>
+<td><a href="#location-schema">Location</a> of the job.</td>
+</tr>
+<tr>
+<td>brand_id</td>
+<td><code class="prettyprint">int</code></td>
+<td>Optional ID for your <a href="#brands">brand</a></td>
+</tr>
+<tr>
+<td>customer_id</td>
+<td><code class="prettyprint">int</code></td>
+<td>ID of the customer object.</td>
+</tr>
+<tr>
+<td>organization_id</td>
+<td><code class="prettyprint">int</code></td>
+<td>ID of the assigned organization</td>
+</tr>
+<tr>
+<td>service_fee</td>
+<td><code class="prettyprint">float</code></td>
+<td>Fee the customer owes for service</td>
+</tr>
+<tr>
+<td>status</td>
+<td><code class="prettyprint">string</code></td>
+<td>Status of the job. See <a href="#job-statuses">job statuses</a></td>
+</tr>
+<tr>
+<td>status_message</td>
+<td><code class="prettyprint">string</code></td>
+<td>Optional qualifier for the current status</td>
+</tr>
+</tbody></table>
+
+<h2 id="job-statuses"><a name="job-statuses"></a>Job Statuses</h2>
+
+<p>Jobs can move freely between any of the supported statuses below.</p>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>unscheduled</td>
+<td>The job belongs to this organization but has not yet been scheduled</td>
+</tr>
+<tr>
+<td>scheduled</td>
+<td>The job is currently scheduled. Note that Dispatch automatically sets the job&rsquo;s status to &ldquo;scheduled&rdquo; if an appointment is created</td>
+</tr>
+<tr>
+<td>paused</td>
+<td>The job has started, but had to be paused</td>
+</tr>
+<tr>
+<td>complete</td>
+<td>The job has finished</td>
+</tr>
+<tr>
+<td>canceled</td>
+<td>The job is canceled - work no longer needs to be done.</td>
+</tr>
+</tbody></table>
+
+<h2 id="job-offers">Job Offers</h2>
+
+<p>If your workflow includes <strong>offering</strong> the job to an organization and requiring them to accept or reject it, you can create a job with status set to &ldquo;offered&rdquo;, which is a special status that has slightly different behavior in our applications. </p>
+
+<h3 id="accepting-rejecting-on-behalf-of-organization"><a name="accept-reject-behalf"></a>Accepting/Rejecting on behalf of Organization</h3>
+
+<blockquote>
+<p>Accept Job w/ Appointment</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"appointment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Time"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Dispatchers can accept and reject job offers via our application. However, if you have another mechanism for job offer interaction, and want to keep the Dispatch system up to date, you can do so by making a <code class="prettyprint">POST</code> request to either <code class="prettyprint">/v3/jobs/:id/accept</code> or <code class="prettyprint">/v3/jobs/:id/reject</code>. </p>
+
+<p>For accepting, if you provide appointment information, the job will move into &ldquo;scheduled&rdquo; status. Otherwise, it will move into &ldquo;unscheduled&rdquo;.</p>
+
+<p>For rejecting, the job will move into &ldquo;rejected&rdquo; status and it will become read-only for the organization&rsquo;s users in our application.</p>
+
+<aside class="notice">If you&rsquo;ll notice, we do not have a status called &ldquo;accepted&rdquo;. That&rsquo;s because when the job is accepted, it moves either into &ldquo;unschedled&rdquo; or &ldquo;scheduled&rdquo; status, depending on if the dispatcher is also scheduling an appointment.</aside>
+
+<h2 id="create-a-job">Create a Job</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/jobs</code></p>
+
+<h2 id="list-jobs">List Jobs</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"jobs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>brand_id_eq</td>
+<td>Show jobs in a certain brand</td>
+</tr>
+<tr>
+<td>customer_id_eq</td>
+<td>Show jobs for a certain customer</td>
+</tr>
+<tr>
+<td>customer_id_in</td>
+<td>Show jobs for a group of customers</td>
+</tr>
+<tr>
+<td>external_ids_contains</td>
+<td>Show jobs with a certain external ID</td>
+</tr>
+<tr>
+<td>organization_id_eq</td>
+<td>Show jobs assigned to a certain organization</td>
+</tr>
+<tr>
+<td>organization_id_in</td>
+<td>Show jobs assigned to a group of organizations</td>
+</tr>
+<tr>
+<td>status_eq</td>
+<td>Show jobs in a certain status</td>
+</tr>
+<tr>
+<td>status_in</td>
+<td>Show jobs in a group of statuses</td>
+</tr>
+<tr>
+<td>status_not_eq</td>
+<td>Show jobs that are not in a certain status</td>
+</tr>
+</tbody></table>
+
+<h2 id="view-a-single-job">View a Single Job</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/jobs/:id</code></p>
+
+<h2 id="update-job">Update Job</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"canceled"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"canceled"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/jobs/:id</code></p>
+
+<aside class="notice">Remember, to move a job from &ldquo;offered&rdquo; status, you need to [accept or reject it on behalf of the orgnanization](#accept-reject-behalf) if they cannot do so in our application.</aside>
+
+<h1 id="organizations"><a name="organizations"></a> Organizations</h1>
+
+<p>Organizations are the service providers that perform the work.</p>
+
+<h2 id="organization-attributes">Organization Attributes</h2>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>external_ids</td>
+<td><code class="prettyprint">array&lt;string&gt;</code></td>
+<td>Your ID(s) for this job. See <a href="#external-ids">external ids</a></td>
+</tr>
+<tr>
+<td>address</td>
+<td><code class="prettyprint">Location</code></td>
+<td>Organization&rsquo;s physical address. See <a href="#location-schema">Location entity schema</a></td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td><code class="prettyprint">string</code></td>
+<td>Phone number in <a href="https://www.ietf.org/rfc/rfc3966.txt">RFC3966 format</a></td>
+</tr>
+<tr>
+<td>email</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>logo_token</td>
+<td><code class="prettyprint">string</code></td>
+<td>Token for organization&rsquo;s logo in our <a href="#files-photos">file system</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="create-an-organization">Create an Organization</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/organizations</code></p>
+
+<h2 id="list-organizations">List Organizations</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>external_ids_contains</td>
+<td>Show organizations with a certain external ID</td>
+</tr>
+</tbody></table>
+
+<h2 id="view-a-single-organization">View a Single Organization</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/organizations/:id</code></p>
+
+<h2 id="update-an-organization">Update an Organization</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15557826394"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15557826394"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/organizations/:id</code></p>
+
+<h2 id="delete-an-organization">Delete an Organization</h2>
+
+<p><code class="prettyprint">DELETE /v3/organizations/:id</code></p>
+
+<h1 id="survey-responses"><a name="survey-responses"></a> Survey Responses</h1>
+
+<p>Survey responses are submitted by customers via our customer portal. They&rsquo;re sent when an appointment moves into &ldquo;complete&rdquo; status, or, if there are no appointments, when the job itself moves to &ldquo;complete&rdquo;.</p>
+
+<aside class="notice">Note that to avoid spam, we **do not** send a survey to a customer if they have received one for the same job within the past 24 hours.</aside>
+
+<h2 id="list-survey-responses">List Survey Responses</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"survey_responses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"rating"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"appointment_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Technician was really nice"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/survey_responses</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>job_id_eq</td>
+<td>Show survey responses for a specific job</td>
+</tr>
+</tbody></table>
+
+<h1 id="users"><a name="users"></a> Users</h1>
+
+<p>Users are the dispatchers managing the workforce for an organization, or the technician performing the work.</p>
+
+<h2 id="user-authentication">User Authentication</h2>
+
+<aside class="notice">Note that users can log in either using their **phone number**, in which case we will send a code to their phone to verify their identity, or using a combination of their **email** and **password**. As such, if you provide a phone number, it must be a valid mobile number for the user to be able to log in.</aside>
+
+<h2 id="user-attributes">User Attributes</h2>
+
+<table><thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>organization_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>Organization this user is assigned to</td>
+</tr>
+<tr>
+<td>first_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>last_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>address</td>
+<td><code class="prettyprint">Location</code></td>
+<td></td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td><code class="prettyprint">string</code></td>
+<td>Phone number in <a href="https://www.ietf.org/rfc/rfc3966.txt">RFC3966 format</a>.</td>
+</tr>
+<tr>
+<td>email</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>logo_token</td>
+<td><code class="prettyprint">string</code></td>
+<td>Token for organization&rsquo;s logo in our <a href="#files-photos">file system</a></td>
+</tr>
+<tr>
+<td>roles</td>
+<td><code class="prettyprint">array&lt;string&gt;</code></td>
+<td>Valid roles are either &ldquo;dispatcher&rdquo; or &ldquo;technician&rdquo;. Users can have both roles. Note that users with only the &ldquo;technician&rdquo; role cannot log in to the desktop application.</td>
+</tr>
+<tr>
+<td>password</td>
+<td><code class="prettyprint">string</code></td>
+<td>User&rsquo;s password. Only used for creation and updating. Not returned in <code class="prettyprint">GET</code> requests.</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-user">Create a User</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"supersecretpassword"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12834</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/users</code></p>
+
+<h2 id="list-users">List Users</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/users</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>by_user_roles</td>
+<td>Search for users in the provided role(s).</td>
+</tr>
+<tr>
+<td>email_eq</td>
+<td>Search for users by email</td>
+</tr>
+<tr>
+<td>organization_id_eq</td>
+<td>Search for users in a specific organization</td>
+</tr>
+</tbody></table>
+
+<h2 id="view-a-single-user">View a Single User</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12834</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/users/:id</code></p>
+
+<h2 id="update-a-user">Update a User</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newpassword"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12834</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">PATCH /v3/users/:id</code></p>
+
+<h2 id="delete-a-user">Delete a User</h2>
+
+<p><code class="prettyprint">DELETE /v3/users/:id</code></p>
+
+<h1 id="work-orders"><a name="work-orders"></a> Work Orders</h1>
+
+<p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;. </p>
+
+<p>Work Orders are currently <strong>create only</strong>. Meaning, when you <code class="prettyprint">POST</code> to <code class="prettyprint">/v3/work_orders</code>, we will create the underlying <a href="#jobs">job</a>, <a href="#customers">customer</a> for each organization, and handle the orchestration, but to query and update the data you will need to interact with the REST endpoints for those individual records. We do, however, have plans for the near future to implement access to those underlying objects via the Work Order API endpoint.</p>
+
+<h2 id="work-order-object">Work Order Object</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB 123: Fix the Toilet"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Job Info\n* Dog attacked the last guy"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"orchestration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct_offer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Apt 2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"appointment_windows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T05:00:00Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T11:00:00Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Testy"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"McGee"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"company_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Widgets, Inc."</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This person is really nice"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testy.mcgee@widgets.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Street"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558889999"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>The Work Order document contains all of the information to create all objects in the Dispatch system needed to handle your workflow. See <a href="#posting-work-order">Posting a Work Order to Dispatch</a></p>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>title</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code class="prettyprint">string</code></td>
+<td>markdown is supported</td>
+</tr>
+<tr>
+<td>service_type</td>
+<td><code class="prettyprint">string</code></td>
+<td>Type of service to be performed</td>
+</tr>
+<tr>
+<td>brand_id</td>
+<td><code class="prettyprint">integer</code></td>
+<td>Optionally assign to a <a href="#brands">brand</a> within your account. <br/>This is the brand&rsquo;s ID in the Dispatch system.</td>
+</tr>
+<tr>
+<td>orchestration</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>See <a href="#orchestration-algorithms">orchestration algorithms</a></td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>ID for the work order in your system. See <a href="#external-ids">external ids</a></td>
+</tr>
+<tr>
+<td>location</td>
+<td><code class="prettyprint">Location</code></td>
+<td>Location of the work. <a href="#location-schema">Location entity schema</a></td>
+</tr>
+<tr>
+<td>appointment_windows</td>
+<td><code class="prettyprint">array&lt;AppointmentWindow&gt;</code></td>
+<td>Optionally provide appointment windows for the <br/>organization to choose from. <br/><a href="#appointment-window-schema">AppointmentWindow entity schema</a></td>
+</tr>
+<tr>
+<td>contacts</td>
+<td><code class="prettyprint">array&lt;Contact&gt;</code></td>
+<td>List of contacts for the work order. <a href="#contact-schema">Contact entity schema</a></td>
+</tr>
+<tr>
+<td>organizations</td>
+<td><code class="prettyprint">array&lt;Organization&gt;</code></td>
+<td>List of organizations to send/offer the work to. <br/>Note that in &ldquo;direct&rdquo; orchestration only a single <br />organization is permitted. <a href="#organization-schema">Organization entity schema</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="orchestration-algorithms"><a name="orchestration-algorithms"></a>Orchestration Algorithms</h2>
+
+<table><thead>
+<tr>
+<th>Algorithm</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>direct_offer</td>
+<td>Offer the job to a single organization. Job starts in &ldquo;offered&rdquo; status.</td>
+</tr>
+<tr>
+<td>direct_assign</td>
+<td>Assign the job to a single organization. Job starts in &ldquo;unscheduled&rdquo; status.</td>
+</tr>
+<tr>
+<td>round_robin</td>
+<td><strong>Coming Soon!</strong></td>
+</tr>
+<tr>
+<td>jump_ball</td>
+<td><strong>Coming Soon!</strong></td>
+</tr>
+</tbody></table>
+
+<h2 id="location-entity">Location Entity <a name="location-schema"></a></h2>
+
+<p>Locations are not business objects in our system, but are attributes on several of our core business objects. </p>
+
+<p>Currently Dispatch only supports locations in the US and Canada.</p>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>street_1</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>street_2</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>city</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>state</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>two-character abbreviation for the state.</td>
+</tr>
+<tr>
+<td>postal_code</td>
+<td><code class="prettyprint">string</code></td>
+<td>5-digit US or 6-character Canadian postal code</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>Timezone in <a href="https://www.iana.org/time-zones">IANA</a> format. <br/>If not provided we will attempt to find the timezone from the provided postal code.</td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>Your system&rsquo;s IDs for the location <br/>See <a href="#external-ids">external ids</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="appointment-window-entity">Appointment Window Entity <a name="appointment-window-schema"></a></h2>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start_time</td>
+<td><code class="prettyprint">string</code></td>
+<td>ISO8601 timestamp</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td><code class="prettyprint">string</code></td>
+<td>ISO8601 timestamp</td>
+</tr>
+</tbody></table>
+
+<h2 id="organization-entity">Organization Entity <a name="organization-schema"></a></h2>
+
+<p>We will attempt to look up the organization in our system using, in order:</p>
+
+<ul>
+<li><code class="prettyprint">id</code> (Dispatch&rsquo;s ID)</li>
+<li><code class="prettyprint">external_id</code> (your system&rsquo;s ID)</li>
+<li>name + address + email + phone number</li>
+</ul>
+
+<p>If we find the organization, we will use the record we already have, since they may have already logged into Dispatch and be managing their jobs and we don&rsquo;t want to create another account for them. If we don&rsquo;t find the record, we will create a new one with the data you provide.</p>
+
+<p>Note that if you are sure that the organization already exists in Dispatch, you <strong>only</strong> need to provide either the <code class="prettyprint">id</code> or <code class="prettyprint">external_id</code> fields. However, we recommend that you provide all data to avoid any errors.</p>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td><code class="prettyprint">string</code></td>
+<td>Name of the organization.</td>
+</tr>
+<tr>
+<td>address</td>
+<td><code class="prettyprint">Location</code></td>
+<td></td>
+</tr>
+<tr>
+<td>email</td>
+<td><code class="prettyprint">string</code></td>
+<td>Email address for the organization&rsquo;s office</td>
+</tr>
+<tr>
+<td>phone_number</td>
+<td><code class="prettyprint">string</code></td>
+<td>Phone number in <a href="https://www.ietf.org/rfc/rfc3966.txt">RFC3966 format</a></td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>ID for the organization in your system. <a href="#external-ids">external ids</a></td>
+</tr>
+<tr>
+<td>id</td>
+<td><code class="prettyprint">int</code></td>
+<td>ID for the organization in Dispatch. Provide if you know it, otherwise omit.</td>
+</tr>
+</tbody></table>
+
+<h2 id="contact-entity">Contact Entity <a name="contact-schema"></a></h2>
+
+<p>A contact is any person who the organization may need to get in touch with over the lifecycle of the work order.</p>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>first_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>last_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>company_name</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>ID(s) for the contact in your system. See <a href="#external-ids">external ids</a></td>
+</tr>
+<tr>
+<td>primary</td>
+<td><code class="prettyprint">bool</code></td>
+<td>You must designate a single primary contact (set to <code class="prettyprint">true</code>) <br/>per work order. This person will be able to log in to the customer  <br/> portal, suggest appointment windows, and provide feedback at <br/>the end of the appointment.</td>
+</tr>
+<tr>
+<td>notes</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>billing_address</td>
+<td><code class="prettyprint">Location</code></td>
+<td>Optional billing address for this contact.</td>
+</tr>
+<tr>
+<td>email_addresses</td>
+<td><code class="prettyprint">array&lt;ContactMethod&gt;</code></td>
+<td>List of email addresses for this contact. <a href="#contact-method-schema">Contact method schema</a></td>
+</tr>
+<tr>
+<td>phone_numbers</td>
+<td><code class="prettyprint">array&lt;ContactMethod&gt;</code></td>
+<td>List of phone numbers for this contact. <a href="#contact-method-schema">Contact method schema</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="contact-method-entity">Contact Method Entity <a name="contact-method-schema"></a></h3>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>label</td>
+<td><code class="prettyprint">string</code></td>
+<td>E.g. &ldquo;work&rdquo;, &ldquo;fax&rdquo;, &ldquo;mobile&rdquo;, &ldquo;home&rdquo;</td>
+</tr>
+<tr>
+<td>value</td>
+<td><code class="prettyprint">string</code></td>
+<td>Either the email address or phone number. <br />Phone number must be in <a href="https://www.ietf.org/rfc/rfc3966.txt">RFC3966 format</a></td>
+</tr>
+<tr>
+<td>preferred</td>
+<td><code class="prettyprint">bool</code></td>
+<td>If <code class="prettyprint">true</code>, this phone number or email address will <br />be used to allow this person to log in to the Dispatch system.</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-work-order">Create a Work Order</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"work_order"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/work_orders</code></p>
+
+<h2 id="migrating-from-job-offers">Migrating from Job Offers</h2>
+
+<blockquote>
+<p>Old Job Offer</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"offer_strategy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Sink"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The sink needs fixing."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"appointment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"window_start_time"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"2017-01-01T05:00:00Z"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2017-01-01T11:00:00Z"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"window_end_time"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15559876543"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"home"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"billing_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"entities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"organization"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim's Plumbing"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@jimsplumbing.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558887777"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Test Avenue"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02113"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>New Work Order</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"orchestration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct_offer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Sink"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The sink needs fixing"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"appointment_windows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T05:00:00Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T11:00:00Z"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim's Plumbing"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02113"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558887777"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@jimsplumbing.com"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"billing_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@email.com"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"home"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15559876543"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Note that since we now support multiple contacts per work order, the single <code class="prettyprint">customer</code> record on Job Offers can be mapped to the first member of the <code class="prettyprint">contacts</code> array, marked as <code class="prettyprint">&quot;primary&quot;: true</code>.</p>
+
+<table><thead>
+<tr>
+<th>job offer attribute</th>
+<th>work order attribute</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">offer_strategy</code></td>
+<td><code class="prettyprint">orchestration</code></td>
+<td>See <a href="#orchestration-algorithms">orchestration algorithms</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">duration</code></td>
+<td>-</td>
+<td>Expiration is no longer supported</td>
+</tr>
+<tr>
+<td><code class="prettyprint">duration_algorithm</code></td>
+<td>-</td>
+<td>Expiration is no longer supported</td>
+</tr>
+<tr>
+<td><code class="prettyprint">ui_options</code></td>
+<td>-</td>
+<td>These are now configurable on a per-account basis rather than for each work order. Please speak with your account manager for details.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.type</code></td>
+<td>-</td>
+<td>Work orders can only be sent to organizations</td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.id</code></td>
+<td><code class="prettyprint">organizations.$.id</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.external_id</code></td>
+<td><code class="prettyprint">organizations.$.external_id</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.data.name</code></td>
+<td><code class="prettyprint">organizations.$.name</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.data.address</code></td>
+<td><code class="prettyprint">organizations.$.address</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.data.email</code></td>
+<td><code class="prettyprint">organizations.$.email</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">entities.$.data.phone_number</code></td>
+<td><code class="prettyprint">organizations.$.phone_number</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">job.title</code></td>
+<td><code class="prettyprint">title</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">job.description</code></td>
+<td><code class="prettyprint">description</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">job.service_type</code></td>
+<td><code class="prettyprint">service_type</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">job.external_id</code></td>
+<td><code class="prettyprint">external_id</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">job.address</code></td>
+<td><code class="prettyprint">location</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.first_name</code></td>
+<td><code class="prettyprint">contacts[0].first_name</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.last_name</code></td>
+<td><code class="prettyprint">contacts[0].last_name</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.email</code></td>
+<td><code class="prettyprint">contacts[0].email_addresses.$.value</code></td>
+<td>Set this contact method to <code class="prettyprint">preferred:true</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.phone_numbers.$.number</code></td>
+<td><code class="prettyprint">contacts[0].phone_numbers.$.value</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.phone_numbers.$.type</code></td>
+<td><code class="prettyprint">contacts[0].phone_numbers.$.label</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.phone_numbers.$.primary</code></td>
+<td><code class="prettyprint">contacts[0].phone_numbers.$.preferred</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.external_id</code></td>
+<td><code class="prettyprint">contacts[0].external_id</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.billing_address</code></td>
+<td><code class="prettyprint">contacts[0].billing_address</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">customer.home_address</code></td>
+<td>-</td>
+<td>No need for home address anymore - this is taken from the work order&rsquo;s location.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">appointment.window_start_time.$</code></td>
+<td><code class="prettyprint">appointment_windows.$.start_time</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code class="prettyprint">appointment.window_end_time.$</code></td>
+<td><code class="prettyprint">appointment_windows.$.end_time</code></td>
+<td></td>
 </tr>
 </tbody></table>
 
           <h1 id="errors">Errors</h1>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<p>The Dispatch API uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -291,39 +2380,27 @@ Remember — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; Your request is malformed or otherwise invalid</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; Your OAuth2 bearer token or HMAC signature is incorrect.</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>Forbidden &ndash; Your credentials are correct, but you&rsquo;re not allowed to perform this action.</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>Not Found &ndash; Requested resource could not be found</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>422</td>
+<td>Unprocessable Entity &ndash; Your request payload did not pass our validation rules. See response body for details.</td>
 </tr>
 <tr>
 <td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td>Too Many Requests &ndash; You&rsquo;ve exceeded your rate limit.</td>
 </tr>
 <tr>
 <td>500</td>
@@ -338,9 +2415,7 @@ Remember — a happy kitten is an authenticated kitten!
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="json">json</a>
           </div>
       </div>
     </div>
