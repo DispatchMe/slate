@@ -439,6 +439,7 @@ There are no query parameters available for brands at the moment.
 ```
 
 > Response
+
 ```json
 {
   "brand": {
