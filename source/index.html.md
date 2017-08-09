@@ -112,7 +112,7 @@ Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer tok
 
 ## Access Control & Permissions
 
-Describe third-party vs first-party, data ownership, etc.
+As the source of the work, you have full access to the transactional data you send to Dispatch (meaning, the work order and all child objects). However, depending on the relationship you have with the organizations, they may already be in our system and may already be receiving work from other sources. In that case, you will have limited access to the organizations, their customers, and their dispatchers and technicians. If you have a first-party network, you will have more access to those objects. We recommend you discuss this with your account manager so we can implement the best ACL for your use case.
 
 # <a name="attachments"></a> Attachments
 
