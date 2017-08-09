@@ -53,7 +53,62 @@ For all `GET` requests that return multiple records, you can paginate by providi
 
 # Authentication
 
-Our API is secured using simple HMAC shared-key signatures. 
+# Authentication
+
+Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer token for your account by providing your **public** and **secret** keys that we will provide upon signing up for the platform.
+
+## Retrieving a Bearer Token
+
+> Request:
+
+```json
+{
+  "grant_type": "client_credentials",
+  "client_id": "public_key",
+  "client_secret": "secret_key"
+}
+```
+
+> Response:
+
+```json
+{
+  "access_token": "bearer token value",
+  "token_type": "bearer",
+  "created_at": 1499868367,
+  "expires_in": 10800,
+  "refresh_token": "refresh token value"
+}
+```
+
+`POST /v3/oauth/token`
+
+**These tokens are temporary**, so you will need to be able to handle 401 status codes from our system to retrieve a new token in the event that it is no longer valid.
+
+## Refreshing your Token
+
+> Request:
+
+```json
+{
+  "grant_type": "refresh_token",
+  "refresh_token": "refresh token you received with your original bearer token"
+}
+```
+
+> Response:
+
+```json
+{
+  "access_token": "bearer token value",
+  "token_type": "bearer",
+  "created_at": 1499868367,
+  "expires_in": 10800,
+  "refresh_token": "refresh token value"
+}
+```
+
+`POST /v3/oauth/token`
 
 ## Access Control & Permissions
 
