@@ -193,11 +193,62 @@
 
 <h1 id="authentication">Authentication</h1>
 
-<p>Our API is secured using simple HMAC shared-key signatures. </p>
+<h1 id="authentication">Authentication</h1>
+
+<p>Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer token for your account by providing your <strong>public</strong> and <strong>secret</strong> keys that we will provide upon signing up for the platform.</p>
+
+<h2 id="retrieving-a-bearer-token">Retrieving a Bearer Token</h2>
+
+<blockquote>
+<p>Request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client_credentials"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public_key"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"client_secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret_key"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/oauth/token</code></p>
+
+<p><strong>These tokens are temporary</strong>, so you will need to be able to handle 401 status codes from our system to retrieve a new token in the event that it is no longer valid.</p>
+
+<h2 id="refreshing-your-token">Refreshing your Token</h2>
+
+<blockquote>
+<p>Request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh_token"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token you received with your original bearer token"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/oauth/token</code></p>
 
 <h2 id="access-control-amp-permissions">Access Control &amp; Permissions</h2>
 
-<p>Describe third-party vs first-party, data ownership, etc.</p>
+<p>As the source of the work, you have full access to the transactional data you send to Dispatch (meaning, the work order and all child objects). However, depending on the relationship you have with the organizations, they may already be in our system and may already be receiving work from other sources. In that case, you will have limited access to the organizations, their customers, and their dispatchers and technicians. If you have a first-party network, you will have more access to those objects. We recommend you discuss this with your account manager so we can implement the best ACL for your use case.</p>
 
 <h1 id="attachments"><a name="attachments"></a> Attachments</h1>
 
