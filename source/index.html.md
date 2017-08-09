@@ -376,6 +376,7 @@ user_id_null | Show appointments that are unassigned (value should be `true` her
 Brands represent different brands or divisions within your company, giving you full control over the copy and logo for the mobile and web applications, customer notifications, etc. Logos and job source details fall back to the account level if there is no `brand_id` property present on a job.
 
 ## Create a Brand
+
 > Request
 
 ```json
@@ -391,8 +392,15 @@ Brands represent different brands or divisions within your company, giving you f
 
 ```json
 {
-
+  "brand": {
+    "id": 123,
+    "name": "New Brand",
+    "phone_number": "+15551234567",
+    "logo_token": "9b553add-62cf-47c0-aec1-6705e395b4da",
+    "email": "newbrand@newbrand.com"
+  }
 }
+```
 
 `POST /v3/brands`
 
