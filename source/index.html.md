@@ -116,7 +116,15 @@ As the source of the work, you have full access to the transactional data you se
 
 # <a name="attachments"></a> Attachments
 
-Attachments represent notes assigned to [jobs](#jobs) in the Dispatch platform. These are useful for providing additional information to the service provider after they have already begun work.
+Attachments represent notes or photos belonging to [jobs](#jobs) in the Dispatch platform. These are useful for providing additional information to the service provider after they have already begun work.
+
+## Attributes
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+entity_type | string | Y | N | Type of parent entity. Currently only "Job" is supported.
+entity_id | int | Y | N | ID of the parent job
+description | string | N | Y | Content of the note
+file_token | string | N | Y | File token (from [files API](#files-photos))
 
 ## Create an Attachment
 > Request:
@@ -229,14 +237,14 @@ Appointments are scheduled times at which a technician will do work related to a
 
 Appointments are required to send customers notifications for "on my way" and "appointment scheduled".
 
-## Appointment Attributes
-Attribute | Type | Description
---------- | ---- | -----------
-job_id | int | ID of the parent job
-time | string | ISO8601 timestamp for the appointment's scheduled time
-duration | int | duration, in seconds, of the appointment. Defaults to `7200` (2 hours)
-user_id | int | ID of the assigned technician
-status | string | Status of the appointment. See [Appointment Statuses](#appointment-statuses)
+## Attributes
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+job_id | int | Y | N | ID of the parent job
+time | string | N | Y | ISO8601 timestamp for the appointment's scheduled time
+duration | int | N | Y | duration, in seconds, of the appointment. Defaults to `7200` (2 hours)
+user_id | int | N | Y | ID of the assigned technician
+status | string | Y | Y | Status of the appointment. See [Appointment Statuses](#appointment-statuses)
 
 ## <a name="appointment-statuses"></a>Appointment Statuses
 Appointments can move freely between any of the supported statuses below. Via our mobile app, technicians can update the status of the appointment according to your workflow.
@@ -467,21 +475,21 @@ Customers represent the homeowner, landlord or other entity the work is being do
 Note: customers will be automatically created if you use the <a href="#work-orders">work order object</a>, so you shouldn't have to interact directly with the Customer models unless you are maintaining them separately.
 </aside>
 
-## Customer Attributes
+## Attributes
 Note that currently we support **multiple phone numbers** but only a **single email address** for customers. We have plans to improve this in the near future.
 
-Attribute | Type | Description
---------- | ---- | -----------
-organization_id | `int` | ID of the parent organization
-first_name | `string` |
-last_name | `string` |
-company_name | `string` |
-notes | `string` | Any additional notes about this customer
-email | `string` | Email address for the customer. This will be used to send email notifications if they are configured for your account.
-phone_numbers | `array<PhoneNumber>` | See below for phone number object attributes
-home_address | `Location` | This is used only when creating a new job for this customer in our application. For jobs that come in via our API, the `job.address` property is used. See [Location entity schema](#location-schema)
-billing_address | `Location` | See [Location entity schema](#location-schema)
-external_ids | `array<string>` | See [external IDs](#external-ids)
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+organization_id | `int` | Y | N | ID of the parent organization
+first_name | `string` | Y | Y |
+last_name | `string` | N | Y |
+company_name | `string` | N | Y |
+notes | `string` | N | Y | Any additional notes about this customer
+email | `string` | N | Y | Email address for the customer. This will be used to send email notifications if they are configured for your account.
+phone_numbers | `array<PhoneNumber>` | N | Y | See below for phone number object attributes
+home_address | `Location` | N | Y | This is used only when creating a new job for this customer in our application. For jobs that come in via our API, the `job.address` property is used. See [Location entity schema](#location-schema)
+billing_address | `Location` | N | Y | See [Location entity schema](#location-schema)
+external_ids | `array<string>` | N | Y | See [external IDs](#external-ids)
 
 ### Phone Number Object
 Attribute | Type | Description
@@ -654,22 +662,22 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 # <a name="jobs"></a> Jobs
 Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done. 
 
-## Job Attributes
+## Attributes
 Note that the `organization` and `customer` nested objects will be ignored if `organization_id` or `customer_id` are provided, respectively.
 
-Attribute | Type | Description
---------- | ---- | -----------
-title | `string` |
-description | `string` | Additional details for the job. Supports [markdown](https://daringfireball.net/projects/markdown/syntax)
-service_type | `string` | Type of service, e.g. "plumbing"
-external_ids | `array<string>` | Your ID(s) for this job. See [external-ids](#external-ids)
-address | `Location` | [Location](#location-schema) of the job.
-brand_id | `int` | Optional ID for your [brand](#brands)
-customer_id | `int` | ID of the customer object.
-organization_id | `int` | ID of the assigned organization
-service_fee | `float` | Fee the customer owes for service
-status | `string` | Status of the job. See [job statuses](#job-statuses)
-status_message | `string`| Optional qualifier for the current status
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+title | `string` | Y | Y |
+description | `string` | N | Y | Additional details for the job. Supports [markdown](https://daringfireball.net/projects/markdown/syntax)
+service_type | `string` | N | Y | Type of service, e.g. "plumbing"
+external_ids | `array<string>` | N | N | Your ID(s) for this job. See [external-ids](#external-ids)
+address | `Location` | Y | Y | [Location](#location-schema) of the job.
+brand_id | `int` | N | N | Optional ID for your [brand](#brands)
+customer_id | `int` | Y | Y | ID of the customer object.
+organization_id | `int` | Y | N | ID of the assigned organization
+service_fee | `float` | N | Y | Fee the customer owes for service
+status | `string` | Y | Y | Status of the job. See [job statuses](#job-statuses)
+status_message | `string`| N | Y | Optional qualifier for the current status
 
 ## <a name="job-statuses"></a>Job Statuses
 Jobs can move freely between any of the supported statuses below.
