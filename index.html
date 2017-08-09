@@ -629,18 +629,25 @@
 <p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-
+  </span><span class="nt">"brand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New Brand"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"logo_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9b553add-62cf-47c0-aec1-6705e395b4da"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newbrand@newbrand.com"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST /v3/brands</code></p>
 
-</span><span class="err">`POST</span><span class="w"> </span><span class="err">/v</span><span class="mi">3</span><span class="err">/brands`</span><span class="w">
+<p>For the <code class="prettyprint">logo_token</code> attribute, use the <code class="prettyprint">uid</code> attribute returned when you <a href="#upload-photo">upload your brand logo</a>.</p>
 
-</span><span class="err">For</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">`logo_token`</span><span class="w"> </span><span class="err">attribute,</span><span class="w"> </span><span class="err">use</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">`uid`</span><span class="w"> </span><span class="err">attribute</span><span class="w"> </span><span class="err">returned</span><span class="w"> </span><span class="err">when</span><span class="w"> </span><span class="err">you</span><span class="w"> </span><span class="p">[</span><span class="err">upload</span><span class="w"> </span><span class="err">your</span><span class="w"> </span><span class="err">brand</span><span class="w"> </span><span class="err">logo</span><span class="p">]</span><span class="err">(#upload-photo).</span><span class="w">
+<h2 id="list-brands">List Brands</h2>
 
-</span><span class="err">##</span><span class="w"> </span><span class="err">List</span><span class="w"> </span><span class="err">Brands</span><span class="w">
-</span><span class="err">&gt;</span><span class="w"> </span><span class="err">Response</span><span class="w">
-
-</span><span class="err">```json</span><span class="w">
-</span><span class="p">{</span><span class="w">
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"brands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{},</span><span class="w">
     </span><span class="p">{}</span><span class="w">
