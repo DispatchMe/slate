@@ -454,7 +454,7 @@ There are no query parameters available for brands at the moment.
 `PATCH /v3/brands/:id`
 
 ## Delete Brand
-<aside class="notice">
+<aside class="warning">
 Careful! If you delete a brand then all jobs currently within that brand will use your default "account-level" branding.
 </aside>
 
@@ -464,7 +464,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 Customers represent the homeowner, landlord or other entity the work is being done for. Customers in Dispatch belong to individual organizations, so if you have multiple organizations doing work for the same customer in your system, there will be multiple instances of that customer in Dispatch. We do this to allow organizations to keep their own notes and make their own updates to customer data without affecting other organizations.
 
 <aside class="notice">
-Note: customers will be automatically created if you use the <a href="#job-factory">job factory endpoint</a>, so you shouldn't have to interact directly with the Customer models unless you are maintaining them separately from jobs.
+Note: customers will be automatically created if you use the <a href="#work-orders">work order object</a>, so you shouldn't have to interact directly with the Customer models unless you are maintaining them separately.
 </aside>
 
 ## Customer Attributes
@@ -1036,7 +1036,7 @@ external_ids_contains | Show organizations with a certain external ID
 
 Survey responses are submitted by customers via our customer portal. They're sent when an appointment moves into "complete" status, or, if there are no appointments, when the job itself moves to "complete".
 
-<aside class="notice">Note that to avoid spam, we **do not** send a survey to a customer if they have received one for the same job within the past 24 hours.</aside>
+<aside class="notice">Note that to avoid spam, we <b>do not</b> send a survey to a customer if they have received one for the same job within the past 24 hours.</aside>
 
 ## List Survey Responses
 
@@ -1073,7 +1073,7 @@ Users are the dispatchers managing the workforce for an organization, or the tec
 
 ## User Authentication
 
-<aside class="notice">Note that users can log in either using their **phone number**, in which case we will send a code to their phone to verify their identity, or using a combination of their **email** and **password**. As such, if you provide a phone number, it must be a valid mobile number for the user to be able to log in.</aside>
+<aside class="notice">Note that users can log in either using their <b>phone number</b>, in which case we will send a code to their phone to verify their identity, or using a combination of their <b>email</b> and <b>password</b>. As such, if you provide a phone number, it must be a valid mobile number for the user to be able to log in.</aside>
 
 ## User Attributes
 
