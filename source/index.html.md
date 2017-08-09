@@ -27,7 +27,7 @@ Here's a brief description of our business objects and their role in the Dispatc
 
 Entity | Description
 ------ | -----------
-[Work Order](#work-orders) | A "factory" object that creates the underlying business objects and handles [orchestration](#orchestration). We recommend using this to handle object creation and the entity-specific endpoints to handle changes and querying. We have plans to make this into a real business object in the near future so you don't have to worry about the underlying objects.
+[Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Job](#jobs) | A single body of work for a [customer](#customers), assigned to an [organization](#organization).
 [Customer](#customers) | A job currently belongs to a single customer, representing the homeowner.
 [Organization](#organizations) | Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.
@@ -46,71 +46,18 @@ To make it easier for you to integrate your existing system with Dispatch, sever
 
 We do, however, recommend that you store Dispatch's business object ID for your objects somewhere in your system, since our external IDs support is limited.
 
-# Authentication
-
-Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer token for your account by providing your **public** and **secret** keys that we will provide upon signing up for the platform.
-
-## Retrieving a Bearer Token
-
-> Request:
-
-```json
-{
-  "grant_type": "client_credentials",
-  "client_id": "public_key",
-  "client_secret": "secret_key"
-}
-```
-
-> Response:
-
-```json
-{
-  "access_token": "bearer token value",
-  "token_type": "bearer",
-  "created_at": 1499868367,
-  "expires_in": 10800,
-  "refresh_token": "refresh token value"
-}
-```
-
-`POST /v3/oauth/token`
-
-**These tokens are temporary**, so you will need to be able to handle 401 status codes from our system to retrieve a new token in the event that it is no longer valid.
-
-## Refreshing your Token
-
-> Request:
-
-```json
-{
-  "grant_type": "refresh_token",
-  "refresh_token": "refresh token you received with your original bearer token"
-}
-```
-
-> Response:
-
-```json
-{
-  "access_token": "bearer token value",
-  "token_type": "bearer",
-  "created_at": 1499868367,
-  "expires_in": 10800,
-  "refresh_token": "refresh token value"
-}
-```
-
-`POST /v3/oauth/token`
-
-## Access Control & Permissions
-
-Describe third-party vs first-party, data ownership, etc.
-
 ## Filtering and Paginating
 For `GET` requests, several endpoints allow you to filter the results based on certain record attributes. These are all provided as nested values on a `filter` object within the query string, like so: `?filter[job_id]=123&filter[status]=scheduled`
 
 For all `GET` requests that return multiple records, you can paginate by providing `limit` and `offset` parameters, like so (the maximum value for `limit` is currently 100): `?filter[job_id]=123&filter[status]=scheduled&limit=100&offset=1000`
+
+# Authentication
+
+Our API is secured using simple HMAC shared-key signatures. 
+
+## Access Control & Permissions
+
+Describe third-party vs first-party, data ownership, etc.
 
 # <a name="attachments"></a> Attachments
 
@@ -236,7 +183,7 @@ duration | int | duration, in seconds, of the appointment. Defaults to `7200` (2
 user_id | int | ID of the assigned technician
 status | string | Status of the appointment. See [Appointment Statuses](#appointment-statuses)
 
-## <a name="appointment-statuses"></a>Job Statuses
+## <a name="appointment-statuses"></a>Appointment Statuses
 Appointments can move freely between any of the supported statuses below. Via our mobile app, technicians can update the status of the appointment according to your workflow.
 
 Status | Description
@@ -247,6 +194,10 @@ enroute | The technician is on the way
 in_progress | The technician has arrived and has started the work
 complete | The appointment is finished
 canceled | The appointment has been canceled
+
+### Residual Status Behavior
+* If you *schedule* an appointment, its parent job's status will also change to "scheduled"
+* If you *cancel* a job, the status of all child appointments will change to "canceled"
 
 ## Create an Appointment
 
@@ -376,9 +327,17 @@ Brands represent different brands or divisions within your company, giving you f
 {
   "name": "New Brand",
   "phone_number": "+15551234567",
-  "logo_token": "9b553add-62cf-47c0-aec1-6705e395b4da"
+  "logo_token": "9b553add-62cf-47c0-aec1-6705e395b4da",
+  "email": "newbrand@newbrand.com"
 }
 ```
+
+> Response
+
+```json
+{
+
+}
 
 `POST /v3/brands`
 
@@ -441,7 +400,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 Customers represent the homeowner, landlord or other entity the work is being done for. Customers in Dispatch belong to individual organizations, so if you have multiple organizations doing work for the same customer in your system, there will be multiple instances of that customer in Dispatch. We do this to allow organizations to keep their own notes and make their own updates to customer data without affecting other organizations.
 
 <aside class="notice">
-Note: customers will be automatically created if the `customer` attribute is included as part of the Job object, so you shouldn't have to interact directly with the Customer models unless you are maintaining them separately from jobs.
+Note: customers will be automatically created if you use the <a href="#job-factory">job factory endpoint</a>, so you shouldn't have to interact directly with the Customer models unless you are maintaining them separately from jobs.
 </aside>
 
 ## Customer Attributes
@@ -743,6 +702,94 @@ For rejecting, the job will move into "rejected" status and it will become read-
 ```
 
 `POST /v3/jobs`
+
+## Create a Job, Customer, and Organization together ("Job Factory") <a name="job-factory"></a>
+
+> Request
+
+```json
+{
+  "title": "Fix the Toilet",
+  "description": "The toilet is **clogged**.",
+  "service_type": "PLB",
+  "address": {
+    "street_1": "1234 Test Avenue",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "status": "offered",
+  "customer": {
+    "first_name": "Joe",
+    "last_name": "Shmo",
+    "external_ids": ["AAA123"],
+    "email": "joe.shmo@gmail.com",
+    "phone_numbers": [
+      {
+        "number": "+15555555555",
+        "type": "mobile",
+        "primary": true
+      }
+    ]
+  },
+  "organization": {
+    "name": "Joe's Plumbing",
+    "address": {
+      "street_1": "555 Test Avenue",
+      "street_2": "Unit 5",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "phone_number": "+15551234567",
+    "email": "joe@joesplumbing.com",
+    "external_ids": ["AAA123"]
+  }
+}
+```
+
+> Response
+
+```json
+{
+  "job": {
+    "id": 1,
+    "title": "Fix the Toilet",
+    "description": "The toilet is **clogged**.",
+    "service_type": "PLB",
+    "address": {
+      "street_1": "1234 Test Avenue",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "customer": {
+      "id": 10,
+      "first_name": "Joe",
+      "last_name": "Shmo",
+      "external_ids": ["AAA123"],
+      "email": "joe.shmo@gmail.com",
+      "phone_numbers": [
+        {
+          "number": "+15555555555",
+          "type": "mobile",
+          "primary": true
+        }
+      ]
+    }
+  }
+}
+```
+
+This is a courtesy endpoint that is the equivalent of making three separate requests (`POST /v3/organizations`, `POST /v3/customers`, `POST /v3/jobs`). You can hit this single endpoint to create everything you need to process a job in Dispatch.
+
+`POST /v3/jobs/factory`
 
 ## List Jobs
 
@@ -1182,7 +1229,7 @@ organization_id_eq | Search for users in a specific organization
 # <a name="work-orders"></a> Work Orders
 Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball". 
 
-Work Orders are currently **create only**. Meaning, when you `POST` to `/v3/work_orders`, we will create the underlying [job](#jobs), [customer](#customers) for each organization, and handle the orchestration, but to query and update the data you will need to interact with the REST endpoints for those individual records. We do, however, have plans for the near future to implement access to those underlying objects via the Work Order API endpoint.
+You can **create**, **update**, and **cancel** work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.
 
 ## Work Order Object
 
@@ -1253,8 +1300,6 @@ Work Orders are currently **create only**. Meaning, when you `POST` to `/v3/work
 }
 ```
 
-The Work Order document contains all of the information to create all objects in the Dispatch system needed to handle your workflow. See [Posting a Work Order to Dispatch](#posting-work-order)
-
 attribute | type | notes
 --------- | ---- | -----
 title | `string` | required
@@ -1266,7 +1311,7 @@ external_id | `string` | ID for the work order in your system. See [external ids
 location | `Location` | Location of the work. [Location entity schema](#location-schema)
 appointment_windows | `array<AppointmentWindow>` | Optionally provide appointment windows for the <br/>organization to choose from. <br/>[AppointmentWindow entity schema](#appointment-window-schema)
 contacts | `array<Contact>` | List of contacts for the work order. [Contact entity schema](#contact-schema)
-organizations | `array<Organization>` | List of organizations to send/offer the work to. <br/>Note that in "direct" orchestration only a single <br />organization is permitted. [Organization entity schema](#organization-schema)
+organizations | `array<Organization>` | List of organizations to send/offer the work to. <br/>Note that in "direct_*" orchestration only a single <br />organization is permitted. [Organization entity schema](#organization-schema)
 
 ## <a name="orchestration-algorithms"></a>Orchestration Algorithms
 
@@ -1349,9 +1394,10 @@ preferred | `bool` | If `true`, this phone number or email address will <br />be
 
 ```json
 {
-  "work_order": {
-    "created_at": "ISO8601 Timestamp",
-    "updated_at": "ISO8601 Timestamp",
+  "id": 123,
+  "created_at": "ISO8601 Timestamp",
+  "updated_at": "ISO8601 Timestamp",
+  "data": {
     "title": "",
     "location": {},
     "description": "",
@@ -1360,9 +1406,7 @@ preferred | `bool` | If `true`, this phone number or email address will <br />be
     "organizations": [
       {
         "id": 2,
-        "job_id": 3,
-        "customer_id": 4,
-        "status": "offered"
+        "customer_id": 4
       }
     ]
   }
@@ -1370,6 +1414,27 @@ preferred | `bool` | If `true`, this phone number or email address will <br />be
 ```
 
 `POST /v3/work_orders`
+
+This process does the following:
+
+* Create or identify the organization (see [organization entity documentation](#organization-entity))
+* Create or identify the customer, using the contact marked as `primary: true`. When we support multiple contacts on a job, we will use all of the provided contacts instead of just the primary.
+* Create a new job for that organization and customer.
+* If `appointment_windows` are provided, adds customer suggested times to the job, which will appear to the dispatcher in our application.
+
+Using the ID returned to you upon a successful `POST`, you can update or cancel the work order (see below)
+
+## Update a Work Order
+`PATCH /v3/work_orders/:id`
+
+You can update individual fields, such as just the `location` or just the `description`, or provide the entire work order document as you would in a `POST`.
+
+<aside class="warning">You cannot change the assigned organization of a Work Order after it is created. Instead, we recommend that you cancel the Work Order and create a new one with the correct assignment.</aside>
+
+## Cancel a Work Order
+`POST /v3/work_orders/:id/cancel`
+
+This will cancel the underlying job and any appointments.
 
 ## Migrating from Job Offers
 
