@@ -250,7 +250,7 @@ in_progress | The technician has arrived and has started the work
 complete | The appointment is finished
 canceled | The appointment has been canceled
 
-### Residual Status Behavior
+### Special Status Behavior
 * If you *schedule* an appointment, its parent job's status will also change to "scheduled"
 * If you *cancel* a job, the status of all child appointments will change to "canceled"
 
