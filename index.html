@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Dispatch REST API v3</title>
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -136,7 +138,7 @@
 </thead><tbody>
 <tr>
 <td><a href="#work-orders">Work Order</a></td>
-<td>A &ldquo;factory&rdquo; object that creates the underlying business objects and handles <a href="#orchestration">orchestration</a>. We recommend using this to handle object creation and the entity-specific endpoints to handle changes and querying. We have plans to make this into a real business object in the near future so you don&rsquo;t have to worry about the underlying objects.</td>
+<td>An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.</td>
 </tr>
 <tr>
 <td><a href="#jobs">Job</a></td>
@@ -183,68 +185,19 @@
 
 <p>We do, however, recommend that you store Dispatch&rsquo;s business object ID for your objects somewhere in your system, since our external IDs support is limited.</p>
 
-<h1 id="authentication">Authentication</h1>
-
-<p>Our API is secured using simple OAuth2.0 bearer tokens. You can get a bearer token for your account by providing your <strong>public</strong> and <strong>secret</strong> keys that we will provide upon signing up for the platform.</p>
-
-<h2 id="retrieving-a-bearer-token">Retrieving a Bearer Token</h2>
-
-<blockquote>
-<p>Request:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client_credentials"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public_key"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"client_secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secret_key"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><code class="prettyprint">POST /v3/oauth/token</code></p>
-
-<p><strong>These tokens are temporary</strong>, so you will need to be able to handle 401 status codes from our system to retrieve a new token in the event that it is no longer valid.</p>
-
-<h2 id="refreshing-your-token">Refreshing your Token</h2>
-
-<blockquote>
-<p>Request:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh_token"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token you received with your original bearer token"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<blockquote>
-<p>Response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer token value"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1499868367</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">10800</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh token value"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><code class="prettyprint">POST /v3/oauth/token</code></p>
-
-<h2 id="access-control-amp-permissions">Access Control &amp; Permissions</h2>
-
-<p>Describe third-party vs first-party, data ownership, etc.</p>
-
 <h2 id="filtering-and-paginating">Filtering and Paginating</h2>
 
 <p>For <code class="prettyprint">GET</code> requests, several endpoints allow you to filter the results based on certain record attributes. These are all provided as nested values on a <code class="prettyprint">filter</code> object within the query string, like so: <code class="prettyprint">?filter[job_id]=123&amp;filter[status]=scheduled</code></p>
 
 <p>For all <code class="prettyprint">GET</code> requests that return multiple records, you can paginate by providing <code class="prettyprint">limit</code> and <code class="prettyprint">offset</code> parameters, like so (the maximum value for <code class="prettyprint">limit</code> is currently 100): <code class="prettyprint">?filter[job_id]=123&amp;filter[status]=scheduled&amp;limit=100&amp;offset=1000</code></p>
+
+<h1 id="authentication">Authentication</h1>
+
+<p>Our API is secured using simple HMAC shared-key signatures. </p>
+
+<h2 id="access-control-amp-permissions">Access Control &amp; Permissions</h2>
+
+<p>Describe third-party vs first-party, data ownership, etc.</p>
 
 <h1 id="attachments"><a name="attachments"></a> Attachments</h1>
 
@@ -407,7 +360,7 @@
 </tr>
 </tbody></table>
 
-<h2 id="job-statuses"><a name="appointment-statuses"></a>Job Statuses</h2>
+<h2 id="appointment-statuses"><a name="appointment-statuses"></a>Appointment Statuses</h2>
 
 <p>Appointments can move freely between any of the supported statuses below. Via our mobile app, technicians can update the status of the appointment according to your workflow.</p>
 
@@ -442,6 +395,13 @@
 <td>The appointment has been canceled</td>
 </tr>
 </tbody></table>
+
+<h3 id="residual-status-behavior">Residual Status Behavior</h3>
+
+<ul>
+<li>If you <em>schedule</em> an appointment, its parent job&rsquo;s status will also change to &ldquo;scheduled&rdquo;</li>
+<li>If you <em>cancel</em> a job, the status of all child appointments will change to &ldquo;canceled&rdquo;</li>
+</ul>
 
 <h2 id="create-an-appointment">Create an Appointment</h2>
 
@@ -610,19 +570,26 @@
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New Brand"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"logo_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9b553add-62cf-47c0-aec1-6705e395b4da"</span><span class="w">
+  </span><span class="nt">"logo_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9b553add-62cf-47c0-aec1-6705e395b4da"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newbrand@newbrand.com"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p><code class="prettyprint">POST /v3/brands</code></p>
-
-<p>For the <code class="prettyprint">logo_token</code> attribute, use the <code class="prettyprint">uid</code> attribute returned when you <a href="#upload-photo">upload your brand logo</a>.</p>
-
-<h2 id="list-brands">List Brands</h2>
-
 <blockquote>
 <p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
+
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">`POST</span><span class="w"> </span><span class="err">/v</span><span class="mi">3</span><span class="err">/brands`</span><span class="w">
+
+</span><span class="err">For</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">`logo_token`</span><span class="w"> </span><span class="err">attribute,</span><span class="w"> </span><span class="err">use</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">`uid`</span><span class="w"> </span><span class="err">attribute</span><span class="w"> </span><span class="err">returned</span><span class="w"> </span><span class="err">when</span><span class="w"> </span><span class="err">you</span><span class="w"> </span><span class="p">[</span><span class="err">upload</span><span class="w"> </span><span class="err">your</span><span class="w"> </span><span class="err">brand</span><span class="w"> </span><span class="err">logo</span><span class="p">]</span><span class="err">(#upload-photo).</span><span class="w">
+
+</span><span class="err">##</span><span class="w"> </span><span class="err">List</span><span class="w"> </span><span class="err">Brands</span><span class="w">
+</span><span class="err">&gt;</span><span class="w"> </span><span class="err">Response</span><span class="w">
+
+</span><span class="err">```json</span><span class="w">
+</span><span class="p">{</span><span class="w">
   </span><span class="nt">"brands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{},</span><span class="w">
     </span><span class="p">{}</span><span class="w">
@@ -678,7 +645,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 <p>Customers represent the homeowner, landlord or other entity the work is being done for. Customers in Dispatch belong to individual organizations, so if you have multiple organizations doing work for the same customer in your system, there will be multiple instances of that customer in Dispatch. We do this to allow organizations to keep their own notes and make their own updates to customer data without affecting other organizations.</p>
 
 <aside class="notice">
-Note: customers will be automatically created if the `customer` attribute is included as part of the Job object, so you shouldn&rsquo;t have to interact directly with the Customer models unless you are maintaining them separately from jobs.
+Note: customers will be automatically created if you use the <a href="#job-factory">job factory endpoint</a>, so you shouldn&rsquo;t have to interact directly with the Customer models unless you are maintaining them separately from jobs.
 </aside>
 
 <h2 id="customer-attributes">Customer Attributes</h2>
@@ -1130,6 +1097,92 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p><code class="prettyprint">POST /v3/jobs</code></p>
+
+<h2 id="create-a-job-customer-and-organization-together-quot-job-factory-quot">Create a Job, Customer, and Organization together (&ldquo;Job Factory&rdquo;) <a name="job-factory"></a></h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This is a courtesy endpoint that is the equivalent of making three separate requests (<code class="prettyprint">POST /v3/organizations</code>, <code class="prettyprint">POST /v3/customers</code>, <code class="prettyprint">POST /v3/jobs</code>). You can hit this single endpoint to create everything you need to process a job in Dispatch.</p>
+
+<p><code class="prettyprint">POST /v3/jobs/factory</code></p>
 
 <h2 id="list-jobs">List Jobs</h2>
 
@@ -1690,7 +1743,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 
 <p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;. </p>
 
-<p>Work Orders are currently <strong>create only</strong>. Meaning, when you <code class="prettyprint">POST</code> to <code class="prettyprint">/v3/work_orders</code>, we will create the underlying <a href="#jobs">job</a>, <a href="#customers">customer</a> for each organization, and handle the orchestration, but to query and update the data you will need to interact with the REST endpoints for those individual records. We do, however, have plans for the near future to implement access to those underlying objects via the Work Order API endpoint.</p>
+<p>You can <strong>create</strong>, <strong>update</strong>, and <strong>cancel</strong> work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.</p>
 
 <h2 id="work-order-object">Work Order Object</h2>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -1758,8 +1811,6 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>The Work Order document contains all of the information to create all objects in the Dispatch system needed to handle your workflow. See <a href="#posting-work-order">Posting a Work Order to Dispatch</a></p>
-
 <table><thead>
 <tr>
 <th>attribute</th>
@@ -1815,7 +1866,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <tr>
 <td>organizations</td>
 <td><code class="prettyprint">array&lt;Organization&gt;</code></td>
-<td>List of organizations to send/offer the work to. <br/>Note that in &ldquo;direct&rdquo; orchestration only a single <br />organization is permitted. <a href="#organization-schema">Organization entity schema</a></td>
+<td>List of organizations to send/offer the work to. <br/>Note that in &ldquo;direct_*&rdquo; orchestration only a single <br />organization is permitted. <a href="#organization-schema">Organization entity schema</a></td>
 </tr>
 </tbody></table>
 
@@ -2059,9 +2110,10 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <p>Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"work_order"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ISO8601 Timestamp"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
     </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
     </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
@@ -2070,15 +2122,38 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="w">
+        </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p><code class="prettyprint">POST /v3/work_orders</code></p>
+
+<p>This process does the following:</p>
+
+<ul>
+<li>Create or identify the organization (see <a href="#organization-entity">organization entity documentation</a>)</li>
+<li>Create or identify the customer, using the contact marked as <code class="prettyprint">primary: true</code>. When we support multiple contacts on a job, we will use all of the provided contacts instead of just the primary.</li>
+<li>Create a new job for that organization and customer.</li>
+<li>If <code class="prettyprint">appointment_windows</code> are provided, adds customer suggested times to the job, which will appear to the dispatcher in our application.</li>
+</ul>
+
+<p>Using the ID returned to you upon a successful <code class="prettyprint">POST</code>, you can update or cancel the work order (see below)</p>
+
+<h2 id="update-a-work-order">Update a Work Order</h2>
+
+<p><code class="prettyprint">PATCH /v3/work_orders/:id</code></p>
+
+<p>You can update individual fields, such as just the <code class="prettyprint">location</code> or just the <code class="prettyprint">description</code>, or provide the entire work order document as you would in a <code class="prettyprint">POST</code>.</p>
+
+<aside class="warning">You cannot change the assigned organization of a Work Order after it is created. Instead, we recommend that you cancel the Work Order and create a new one with the correct assignment.</aside>
+
+<h2 id="cancel-a-work-order">Cancel a Work Order</h2>
+
+<p><code class="prettyprint">POST /v3/work_orders/:id/cancel</code></p>
+
+<p>This will cancel the underlying job and any appointments.</p>
 
 <h2 id="migrating-from-job-offers">Migrating from Job Offers</h2>
 
