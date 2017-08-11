@@ -930,6 +930,21 @@ status_not_eq | Show jobs that are not in a certain status
 
 <aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
 
+# Location Entity <a name="location-schema"></a>
+Locations are not business objects in our system, but are attributes on several of our core business objects. 
+
+Currently Dispatch only supports locations in the US and Canada.
+
+attribute | type | notes
+--------- | ---- | -----
+street_1 | `string` | required
+street_2 | `string` |
+city | `string` | required
+state | `enum<string>` | two-character abbreviation for the state. 
+postal_code | `string` | 5-digit US or 6-character Canadian postal code
+timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
+external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
+
 # <a name="organizations"></a> Organizations
 Organizations are the service providers that perform the work.
 
