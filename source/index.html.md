@@ -52,6 +52,8 @@ To make it easier for you to integrate your existing system with Dispatch, sever
 
 We do, however, recommend that you store Dispatch's business object ID for your objects somewhere in your system, since our external IDs support is limited.
 
+<aside class="warning">The external IDs feature is currently only available to job sources.</aside>
+
 ## Filtering and Paginating
 For `GET` requests, several endpoints allow you to filter the results based on certain record attributes. These are all provided as nested values on a `filter` object within the query string, like so: `?filter[job_id]=123&filter[status]=scheduled`
 
@@ -99,7 +101,7 @@ Use this method to authenticate as a job source.
 {
   "grant_type": "password",
   "username": "your-email",
-  "password": "your-password"
+  "password": "your-password",
   "client_id": "public_key",
   "client_secret": "secret_key"
 }
@@ -420,6 +422,8 @@ user_id_null | Show appointments that are unassigned (value should be `true` her
 `DELETE /v3/appointments/:id`
 
 # <a name="brands"></a> Brands
+<aside class="notice">Brands are accessible only to job sources</aside>
+
 Brands represent different brands or divisions within your company, giving you full control over the copy and logo for the mobile and web applications, customer notifications, etc. Logos and job source details fall back to the account level if there is no `brand_id` property present on a job.
 
 ## Create a Brand
