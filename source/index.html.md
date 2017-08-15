@@ -956,9 +956,9 @@ attribute | type | notes
 street_1 | string | required
 street_2 | string |
 city | string | required
-state | enum<string> | two-character abbreviation for the state. 
+state | enum&laquo;string&raquo; | two-character abbreviation for the state. 
 postal_code | string | 5-digit US or 6-character Canadian postal code
-timezone | enum<string> | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
+timezone | enum&laquo;string&raquo; | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
 
 # <a name="organizations"></a> Organizations
 Organizations are the service providers that perform the work.
