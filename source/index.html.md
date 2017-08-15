@@ -24,6 +24,15 @@ Welcome to the Dispatch REST API documentation. Our REST API allows you to easil
 
 Job sources, regardless of network type, must authenticate using [client credentials authentication](#client-credentials-auth), which will provide access to objects assigned to all service providers in the network. Service providers must authenticate using [user authentication](#user-auth).
 
+## Environments
+We have two environments for public access to the API.
+
+Our **sandbox** environment is meant for you to test your integration before putting it into the wild. That API is located at https://api-sandbox.dispatch.me, and you can access our desktop application at https://work-sandbox.dispatch.me.
+
+Our **production** environment is for real jobs and customers. That API is located at https://api.dispatch.me, and you can access our desktop application at https://work.dispatch.me.
+
+Note that your account manager will give you a different set of credentials for each environment.
+
 ## Signing Up
 
 If you're interested in using our API, please work with your account manager and we'll set you up with your credentials. Don't have an account manager? Provide your information here and we'll get back to you.
@@ -58,6 +67,9 @@ We do, however, recommend that you store Dispatch's business object ID for your 
 For `GET` requests, several endpoints allow you to filter the results based on certain record attributes. These are all provided as nested values on a `filter` object within the query string, like so: `?filter[job_id]=123&filter[status]=scheduled`
 
 For all `GET` requests that return multiple records, you can paginate by providing `limit` and `offset` parameters, like so (the maximum value for `limit` is currently 100): `?filter[job_id]=123&filter[status]=scheduled&limit=100&offset=1000`
+
+## Getting Data Back from Dispatch
+You can obviously check up on your data by performing `GET` requests, but we also allow you to subscribe to changes on your objects via **webhooks**. This feature is not self-service, but if you get in touch with your account manager we can walk you through the details. We hope to create a complete self-service webhook system sometime in the next few quarters.
 
 # Authentication
 
@@ -519,23 +531,23 @@ Note that currently we support **multiple phone numbers** but only a **single em
 
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
-organization_id | `int` | Y | N | ID of the parent organization
-first_name | `string` | Y | Y |
-last_name | `string` | N | Y |
-company_name | `string` | N | Y |
-notes | `string` | N | Y | Any additional notes about this customer
-email | `string` | N | Y | Email address for the customer. This will be used to send email notifications if they are configured for your account.
-phone_numbers | `array<PhoneNumber>` | N | Y | See below for phone number object attributes
-home_address | `Location` | N | Y | This is used only when creating a new job for this customer in our application. For jobs that come in via our API, the `job.address` property is used. See [Location entity schema](#location-schema)
-billing_address | `Location` | N | Y | See [Location entity schema](#location-schema)
-external_ids | `array<string>` | N | Y | See [external IDs](#external-ids)
+organization_id | int | Y | N | ID of the parent organization
+first_name | string | Y | Y |
+last_name | string | N | Y |
+company_name | string | N | Y |
+notes | string | N | Y | Any additional notes about this customer
+email | string | N | Y | Email address for the customer. This will be used to send email notifications if they are configured for your account.
+phone_numbers | array&laquo;[PhoneNumber](#phone-number-object)&raquo; | N | Y | See below for phone number object attributes
+home_address | [Location](#location-schema) | N | Y | This is used only when creating a new job for this customer in our application. For jobs that come in via our API, the `job.address` property is used
+billing_address | [Location](#location-schema) | N | Y |
+external_ids | array&laquo;string&raquo; | N | Y | See [external IDs](#external-ids)
 
-### Phone Number Object
+### <a name="phone-number-object"></a>Phone Number Object
 Attribute | Type | Description
 --------- | ---- | -----------
-number | `string` | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
-primary | `boolean` | Set to `true` if you want this number to receive SMS notifications
-type | `string` | E.g. "Mobile", "Work"
+number | string | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
+primary | boolean | Set to `true` if you want this number to receive SMS notifications
+type | string | E.g. "Mobile", "Work"
 
 ## Create a Customer
 > Request
@@ -705,17 +717,17 @@ Jobs are the core of the Dispatch experience. The job object includes the servic
 
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
-title | `string` | Y | Y |
-description | `string` | N | Y | Additional details for the job. Supports [markdown](https://daringfireball.net/projects/markdown/syntax)
-service_type | `string` | N | Y | Type of service, e.g. "plumbing"
-external_ids | `array<string>` | N | N | Your ID(s) for this job. See [external-ids](#external-ids)
-address | `Location` | Y | Y | [Location](#location-schema) of the job.
-brand_id | `int` | N | N | Optional ID for your [brand](#brands)
-customer_id | `int` | Y | Y | ID of the customer object.
-organization_id | `int` | Y | N | ID of the assigned organization
-service_fee | `float` | N | Y | Fee the customer owes for service
-status | `string` | Y | Y | Status of the job. See [job statuses](#job-statuses)
-status_message | `string`| N | Y | Optional qualifier for the current status
+title | string | Y | Y |
+description | string | N | Y | Additional details for the job. Supports [markdown](https://daringfireball.net/projects/markdown/syntax)
+service_type | string | N | Y | Type of service, e.g. "plumbing"
+external_ids | array&laquo;string&raquo; | N | N | Your ID(s) for this job. See [external-ids](#external-ids)
+address | [Location](#location-schema) | Y | Y | [Location](#location-schema) of the job.
+brand_id | int | N | N | Optional ID for your [brand](#brands)
+customer_id | int | Y | Y | ID of the customer object.
+organization_id | int | Y | N | ID of the assigned organization
+service_fee | float | N | Y | Fee the customer owes for service
+status | string | Y | Y | Status of the job. See [job statuses](#job-statuses)
+status_message | string| N | Y | Optional qualifier for the current status
 
 ## <a name="job-statuses"></a>Job Statuses
 Jobs can move freely between any of the supported statuses below.
@@ -751,7 +763,7 @@ For accepting, if you provide appointment information, the job will move into "s
 
 For rejecting, the job will move into "rejected" status and it will become read-only for the organization's users in our application.
 
-<aside class="notice">If you'll notice, we do not have a status called "accepted". That's because when the job is accepted, it moves either into "unschedled" or "scheduled" status, depending on if the dispatcher is also scheduling an appointment.</aside>
+<aside class="notice">If you'll notice, we do not have a status called "accepted". That's because when the job is accepted, it moves either into "unscheduled" or "scheduled" status, depending on if the dispatcher is also scheduling an appointment.</aside>
 
 ## Create a Job
 > Request
@@ -941,13 +953,12 @@ Currently Dispatch only supports locations in the US and Canada.
 
 attribute | type | notes
 --------- | ---- | -----
-street_1 | `string` | required
-street_2 | `string` |
-city | `string` | required
-state | `enum<string>` | two-character abbreviation for the state. 
-postal_code | `string` | 5-digit US or 6-character Canadian postal code
-timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
-external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
+street_1 | string | required
+street_2 | string |
+city | string | required
+state | enum<string> | two-character abbreviation for the state. 
+postal_code | string | 5-digit US or 6-character Canadian postal code
+timezone | enum<string> | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
 
 # <a name="organizations"></a> Organizations
 Organizations are the service providers that perform the work.
@@ -956,12 +967,12 @@ Organizations are the service providers that perform the work.
 
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
-name | `string` | Y | Y |
-external_ids | `array<string>` | N | Y | Your ID(s) for this job. See [external ids](#external-ids)
-address | `Location` | N | Y | Organization's physical address. See [Location entity schema](#location-schema)
-phone_number | `string` | N | Y | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
-email | `string` | Y | Y |
-logo_token | `string` | N | Y | Token for organization's logo in our [file system](#files-photos)
+name | string | Y | Y |
+external_ids | array&laquo;string&raquo; | N | Y | Your ID(s) for this job. See [external ids](#external-ids)
+address | [Location](#location-schema) | N | Y | Organization's physical address.
+phone_number | string | N | Y | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
+email | string | Y | Y |
+logo_token | string | N | Y | Token for organization's logo in our [file system](#files-photos)
 
 ## Create an Organization
 
@@ -1106,10 +1117,10 @@ Survey responses are submitted by customers via our customer portal. They're sen
 
 Attribute | Type  | Description
 --------- | ---- | -----------
-job_id | `int` | 
-appointment_id `int` | ID of the parent appointment. May be `null`, if there was no appointment.
-rating | `int` | 0-5 rating from the customer
-message | `string` | Additional feedback from the customer
+job_id | int | 
+appointment_id int | ID of the parent appointment. May be `null`, if there was no appointment.
+rating | int | 0-5 rating from the customer
+message | string | Additional feedback from the customer
 
 ## List Survey Responses
 
@@ -1160,15 +1171,15 @@ Users are the dispatchers managing the workforce for an organization, or the tec
 
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
-organization_id | `string` | Y | Y | Organization this user is assigned to
-first_name | `string` | Y | Y |
-last_name | `string` | Y | Y |
-address | `Location` | N | Y |
-phone_number | `string` | N | Y | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt).
-email | `string` | N | Y |
-photo_token | `string` | N | Y | Token for user's photo in our [file system](#files-photos). This will show to the customer on the customer portal.
-roles | `array<string>` | Y | Y | Valid roles are either "dispatcher" or "technician". Users can have both roles. Note that users with only the "technician" role cannot log in to the desktop application.
-password | `string` | N | Y | User's password. Only used for creation and updating. Not returned in `GET` requests.
+organization_id | string | Y | Y | Organization this user is assigned to
+first_name | string | Y | Y |
+last_name | string | Y | Y |
+address | [Location](#location-schema) | N | Y |
+phone_number | string | N | Y | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt).
+email | string | N | Y |
+photo_token | string | N | Y | Token for user's photo in our [file system](#files-photos). This will show to the customer on the customer portal.
+roles | array&laquo;string&raquo; | Y | Y | Valid roles are either "dispatcher" or "technician". Users can have both roles. Note that users with only the "technician" role cannot log in to the desktop application.
+password | string | N | Y | User's password. Only used for creation and updating. Not returned in `GET` requests.
 
 ## Create a User
 
