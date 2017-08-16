@@ -968,7 +968,7 @@ Organizations are the service providers that perform the work.
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
 name | string | Y | Y |
-external_ids | array&laquo;string&raquo; | N | Y | Your ID(s) for this job. See [external ids](#external-ids)
+external_ids | array&laquo;string&raquo; | N | Y | Your ID(s) for this organization. See [external ids](#external-ids)
 address | [Location](#location-schema) | N | Y | Organization's physical address.
 phone_number | string | N | Y | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
 email | string | Y | Y |
