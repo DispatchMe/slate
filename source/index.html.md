@@ -1020,7 +1020,7 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
 `POST /v3/organizations`
 
 ### Create an initial user for organization
-When creating an organization via `POST /v3/organizations`, if you provide an additional `boolean` parameter on the organization payload called `create_user` and set it to `true`, a [#users](user object) will be created with both the "dispatcher" and "technician" roles using the `email` attribute on the organization. While that user will not be able to log in directly (we won't make up a password), he or she can start receiving emails for jobs and start interacting them in the Dispatch mobile or desktop application. From there, the new user can set a mobile number and password to be able to log in normally.
+When creating an organization via `POST /v3/organizations`, if you provide an additional `boolean` parameter on the organization payload called `create_user` and set it to `true`, a [user](#users) will be created with both the "dispatcher" and "technician" roles using the `email` attribute on the organization. While that user will not be able to log in directly (we won't make up a password), he or she can start receiving emails for jobs and start interacting them in the Dispatch mobile or desktop application. From there, the new user can set a mobile number and password to be able to log in normally.
 
 ## List Organizations
 
