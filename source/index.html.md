@@ -241,6 +241,22 @@ entity_id_eq | ID of the parent object
 
 `GET https://api.dispatch.me/v3/attachments?filter[entity_type_eq]=Job&filter[entity_id_eq]=123`
 
+## View a Single Attachment
+> Response:
+
+```json
+{
+  "attachment": {
+    "id": 1,
+    "entity_type": "Job",
+    "entity_id": 123,
+    "description": "Here is a note"
+  }
+}
+```
+
+`GET /v3/attachments/:id`
+
 ## Update Attachment
 > Request:
 
@@ -367,6 +383,25 @@ time_lteq | Show appointments scheduled on or before the given time (ISO8601 tim
 user_id_eq | Show appointments assigned to a particular technician
 user_id_in | Show appointments assigned to technicians (separated by comma)
 user_id_null | Show appointments that are unassigned (value should be `true` here)
+
+## View a Single Appointment
+> Response
+
+```json
+{
+  "appointment": {
+    "id": 2,
+    "job_id": 123,
+    "organization_id": 3,
+    "status": "scheduled",
+    "time": "2017-01-01T00:00:00Z",
+    "duration": 3600,
+    "user_id": 456
+  } 
+}
+```
+
+`GET /v3/appointments/:id`
 
 ## Update Appointment
 
@@ -825,6 +860,47 @@ status_eq | Show jobs in a certain status
 status_in | Show jobs in a group of statuses
 status_not_eq | Show jobs that are not in a certain status
 
+## View a Single Job
+
+> Response
+
+```json
+{
+  "job": {
+    "id": 1,
+    "title": "Fix the Toilet",
+    "description": "The toilet is **clogged**.",
+    "service_type": "PLB",
+    "address": {
+      "street_1": "1234 Test Avenue",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "customer": {
+      "id": 10,
+      "first_name": "Joe",
+      "last_name": "Shmo",
+      "external_ids": ["AAA123"],
+      "email": "joe.shmo@gmail.com",
+      "phone_numbers": [
+        {
+          "number": "+15555555555",
+          "type": "mobile",
+          "primary": true
+        }
+      ]
+    }
+  } 
+}
+```
+
+`GET /v3/jobs/:id`
+
 ## Update Job
 
 > Request
@@ -974,6 +1050,32 @@ When creating an organization via `POST /v3/organizations`, if you provide an ad
 Parameter | Description
 --------- | -----------
 external_ids_contains | Show organizations with a certain external ID
+
+## View a Single Organization
+
+> Response
+
+```json
+{
+  "organization": {
+    "id": 123,
+    "name": "Joe's Plumbing",
+    "address": {
+      "street_1": "555 Test Avenue",
+      "street_2": "Unit 5",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "phone_number": "+15551234567",
+    "email": "joe@joesplumbing.com",
+    "external_ids": ["AAA123"]
+  }
+}
+```
+
+`GET /v3/organizations/:id`
 
 ## Update an Organization
 
@@ -1149,6 +1251,27 @@ by_user_roles | Search for users in the provided role(s).
 email_eq | Search for users by email
 organization_id_eq | Search for users in a specific organization
 
+
+## View a Single User
+
+> Response
+
+```json
+{
+  "user": {
+    "id": 12834,
+    "organization_id": 10,
+    "first_name": "Jim",
+    "last_name": "the Technician",
+    "roles": ["technician"],
+    "phone_number": "+15551234567",
+    "email": "jim@joesplumbing.com"
+  }
+}
+```
+
+`GET /v3/users/:id`
+
 ## Update a User
 
 > Request
@@ -1177,7 +1300,18 @@ organization_id_eq | Search for users in a specific organization
 
 `PATCH /v3/users/:id`
 
-## Delete a User
+## Delete/Deactivate a User
+You can **soft-delete** a user to deactivate their account (they will no longer be able to log in) but still see their appointment history.
+
+Common scenarios for using this feature are:
+* If an employee is fired
+* If you have a seasonal employee
+
+<aside class="info">If a user is deactivated, you can re-use his or her phone number for a different user. This is useful if you have company-issued phones that you want to assign to a different employee, or if that employee moves between multiple organizations that you control.</aside>
 
 `DELETE /v3/users/:id`
+
+## Reactivate a User
+
+`POST /v3/users/:id/restore`
 
