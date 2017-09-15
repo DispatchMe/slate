@@ -309,7 +309,7 @@ Status | Description
 draft | A tentative appointment. May be missing information
 scheduled | The appointment is scheduled
 enroute | The technician is on the way
-in_progress | The technician has arrived and has started the work
+started | The technician has arrived and has started the work
 complete | The appointment is finished
 canceled | The appointment has been canceled
 
@@ -1304,7 +1304,7 @@ organization_id_eq | Search for users in a specific organization
 You can **soft-delete** a user to deactivate their account (they will no longer be able to log in) but still see their appointment history.
 
 Common scenarios for using this feature are:
-* If an employee is fired
+* If an employee is let go
 * If you have a seasonal employee
 
 <aside class="info">If a user is deactivated, you can re-use his or her phone number for a different user. This is useful if you have company-issued phones that you want to assign to a different employee, or if that employee moves between multiple organizations that you control.</aside>
