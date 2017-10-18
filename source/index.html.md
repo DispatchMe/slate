@@ -711,6 +711,101 @@ For rejecting, the job will move into "rejected" status and it will become read-
 
 `POST /v3/jobs`
 
+## Create a Job + related records
+
+> Request
+
+```json
+{
+  "title": "Fix the Toilet",
+  "description": "The toilet is **clogged**.",
+  "service_type": "PLB",
+  "address": {
+    "street_1": "1234 Test Avenue",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "status": "offered",
+  "customer": {
+    "email": "customer@email.com",
+    "phone_numbers": [
+      {
+        "number": "+15551234567",
+        "primary": true,
+        "type": "mobile"
+      },
+      {
+        "number": "+15559876543",
+        "primary": false,
+        "type": "work"
+      }
+    ],
+    "first_name": "Joe",
+    "last_name": "Shmo",
+    "external_ids": ["AAA123"]
+  },
+  "organization": {
+    "name": "Joe's Plumbing",
+    "address": {
+      "street_1": "555 Test Avenue",
+      "street_2": "Unit 5",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "phone_number": "+15551234567",
+    "email": "joe@joesplumbing.com",
+    "external_ids": ["AAA123"]
+  }
+}
+```
+
+> Response
+
+```json
+{
+  "job": {
+    "id": 1,
+    "title": "Fix the Toilet",
+    "description": "The toilet is **clogged**.",
+    "service_type": "PLB",
+    "address": {
+      "street_1": "1234 Test Avenue",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "customer": {
+      "id": 10,
+      "first_name": "Joe",
+      "last_name": "Shmo",
+      "external_ids": ["AAA123"],
+      "email": "joe.shmo@gmail.com",
+      "phone_numbers": [
+        {
+          "number": "+15555555555",
+          "type": "mobile",
+          "primary": true
+        }
+      ]
+    }
+  }
+}
+```
+
+As a job source, your workflow may require you to create an organization record, a customer record, and a job record as part of a single process. We offer a courtesy "factory" endpoint that allows you to create all three of these entities with a single request. It is the same as the call to create a job record, but you can provide a nested `Organization` and `Customer` record in the JSON payload instead of `organization_id` and `customer_id`.
+
+<aside class="info">Note that this process will attempt to identify an existing organization and customer record before creating new ones, so you can safely use this endpoint for your workflow even if you have previously sent over those same records.</aside>
+
+`POST /v3/jobs/factory`
+
 ## List Jobs
 
 > Response
