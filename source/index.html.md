@@ -1324,6 +1324,7 @@ organization_id_eq | Search for users in a specific organization
 You can **soft-delete** a user to deactivate their account (they will no longer be able to log in) but still see their appointment history.
 
 Common scenarios for using this feature are:
+
 * If an employee is let go
 * If you have a seasonal employee
 
