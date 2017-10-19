@@ -48,7 +48,7 @@ Entity | Description
 [Organization](#organizations) | Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.
 [Appointment](#appointments) | Scheduled times at which an assigned [user](#users) (technician) will perform the work for the job
 [User](#users) | Users are the users of our application. Currently we have 2 types of users: the **dispatcher** and the **technician**. Users can also have both roles if it makes sense for your use case. We have separate mobile applications for each role, as well as a single desktop web application for dispatchers to manage their workforce from the office.
-[Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed. 
+[Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed.
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
 
@@ -278,7 +278,7 @@ user_id_null | Show appointments that are unassigned (value should be `true` her
     "time": "2017-01-01T00:00:00Z",
     "duration": 3600,
     "user_id": 456
-  } 
+  }
 }
 ```
 
@@ -596,7 +596,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 `GET /v3/datafiles/:uid`
 
 # <a name="jobs"></a> Jobs
-Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done. 
+Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done.
 
 ## Attributes
 
@@ -610,6 +610,7 @@ address | [Location](#location-schema) | Y | Y | [Location](#location-schema) of
 brand_id | int | N | N | Optional ID for the [brand](#brands)
 source_id | int | N | N | ID of the source, if the job came from a job source. Will be `null` if the job is a retail job created by the organization.
 customer_id | int | Y | Y | ID of the customer object.
+contacts | array&laquo;object&raquo; | N | Y | Contacts to be notified about this job
 organization_id | int | Y | N | ID of the assigned organization
 service_fee | float | N | Y | Fee the customer owes for service
 status | string | Y | Y | Status of the job. See [job statuses](#job-statuses)
@@ -627,7 +628,7 @@ complete | The job has finished
 canceled | The job is canceled - work no longer needs to be done.
 
 ## Job Offers
-If your workflow includes **offering** the job to an organization and requiring them to accept or reject it, you can create a job with status set to "offered", which is a special status that has slightly different behavior in our applications. 
+If your workflow includes **offering** the job to an organization and requiring them to accept or reject it, you can create a job with status set to "offered", which is a special status that has slightly different behavior in our applications.
 
 ### <a name="accept-reject-behalf"></a>Accepting/Rejecting on behalf of Organization
 
@@ -643,7 +644,7 @@ If your workflow includes **offering** the job to an organization and requiring 
 }
 ```
 
-Dispatchers can accept and reject job offers via our application. However, if you have another mechanism for job offer interaction, and want to keep the Dispatch system up to date, you can do so by making a `POST` request to either `/v3/jobs/:id/accept` or `/v3/jobs/:id/reject`. 
+Dispatchers can accept and reject job offers via our application. However, if you have another mechanism for job offer interaction, and want to keep the Dispatch system up to date, you can do so by making a `POST` request to either `/v3/jobs/:id/accept` or `/v3/jobs/:id/reject`.
 
 For accepting, if you provide appointment information, the job will move into "scheduled" status. Otherwise, it will move into "unscheduled".
 
@@ -806,6 +807,8 @@ As a job source, your workflow may require you to create an organization record,
 
 `POST /v3/jobs/factory`
 
+`POST /v3/jobs`
+
 ## List Jobs
 
 > Response
@@ -872,7 +875,7 @@ status_not_eq | Show jobs that are not in a certain status
         }
       ]
     }
-  } 
+  }
 }
 ```
 
@@ -929,8 +932,376 @@ status_not_eq | Show jobs that are not in a certain status
 
 <aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
 
+## Contacts
+> Schema
+
+```json
+
+{
+  "contacts": [
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "primary": true,
+      "relationship": "Landlord",
+      "address": {
+        "street_1": "1234 Test Avenue",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02115",
+        "timezone": "America/New_York"
+      },
+      "contact_methods": [
+        {
+          "method": "phone",
+          "value": "+15555555555",
+          "notify": true
+        },
+        {
+          "method": "email",
+          "value": "email1@test.com",
+          "notify": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+When creating a job, you can optionally provide an array of contacts with your request. These contacts will be stored on the job and used for notifications (in place of the customer object when they are provided). You may provide as many contact_methods of type `"phone"` or `"email"` as you want - we will send our notifications to all methods designated with `notify: true`.
+
+<aside class="info">10-15-2017 // This feature is currently back-end only and these contacts will not be reflected in our UIs if they are different from the customer.</aside>
+
+
+### Contacts
+
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+first_name | string | Y | Y |
+last_name | string | Y | Y |
+primary | boolean | N | Y | Will eventually determine default customer creation and authentication
+relationship | string | N | Y | Some description of the contact's relationship to other contacts and the job e.g. "Landlord"
+address | [Address](#location-schema) | N | Y | [Address](#location-schema) associated with this contact.
+contact_methods | array&laquo;object&raquo; | Y | Y | An array of contact methods to which notifications will be sent. See the attributes available below
+
+### Contact Methods
+
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+method | string | Y | Y | The type of contact method. Currently, it can only be either `phone` or `email`.
+value | string | Y | Y | The phone number or email to be notified
+notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't.
+
+
+
+## Create a Job with Contacts
+
+> Request
+
+```json
+{
+  "title": "Fix the Toilet",
+  "description": "The toilet is **clogged**.",
+  "service_type": "PLB",
+  "address": {
+    "street_1": "1234 Test Avenue",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "status": "offered",
+  "customer_id": 123,
+  "contacts": [
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "primary": true,
+      "relationship": "Landlord",
+      "contact_methods": [
+        {
+          "method": "phone",
+          "value": "+1553442466",
+          "notify": true
+        },
+        {
+          "method": "email",
+          "value": "email1@test.com",
+          "notify": false
+        }
+      ]
+    },
+    {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "primary": false,
+      "relationship": "Tenant",
+      "contact_methods": [
+        {
+          "method": "phone",
+          "value": "+15553442466",
+          "notify": false
+        },
+        {
+          "method": "email",
+          "value": "email2@test.com",
+          "notify": true
+        }
+      ]
+    }
+  ],
+  "organization_id": 254
+}
+```
+
+> Response
+
+```json
+{
+    "job": {
+        "id": 1,
+        "organization_id": 1368,
+        "title": "Fix the Toilet",
+        "status": "offered",
+        "description": "The toilet is **clogged**.",
+        "service_type": "plb",
+        "customer_id": 123,
+        "address": {
+            "street_1": "1234 Test Avenue",
+            "street_2": null,
+            "postal_code": "02115",
+            "city": "Boston",
+            "state": "MA",
+            "country": "United States",
+            "timezone": "America/New_York",
+            "latitude": 42.3450151,
+            "longitude": -71.0877962,
+        },
+        "contacts": [
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "relationship": "Landlord",
+                "contact_methods": [
+                    {
+                        "id": 10,
+                        "method": "email",
+                        "value": "email1@test.com",
+                        "notify": false,
+                        "contact_id": 1,
+                    },
+                    {
+                        "id": 11,
+                        "method": "phone",
+                        "value": "+1553442466",
+                        "notify": true,
+                        "contact_id": 1,
+                    }
+                ],
+                "address": null
+            },
+            {
+                "id": 2,
+                "first_name": "Jane",
+                "last_name": "Doe",
+                "relationship": "Tenant",
+                "contact_methods": [
+                    {
+                        "id": 12,
+                        "method": "email",
+                        "value": "email2@test.com",
+                        "notify": true,
+                        "contact_id": 2,
+                    },
+                    {
+                        "id": 13,
+                        "method": "phone",
+                        "value": "+15553442466",
+                        "notify": false,
+                        "contact_id": 2,
+                    }
+                ],
+                "address": null
+            }
+        ]
+    }
+}
+```
+
+The POST to create a job with contacts simply adds an additional array on top of everything else. In the response you'll receive numeric ids back for each contact and contact method. You'll use these when updating those contacts and contact methods later.
+
+<aside class="info">Note that to ensure backwards compatibility across our apps while this feature is in beta, you must still provide a customer ID or object in the request. Simply use the primary contact from the job as the customer.</aside>
+
+`POST /v3/jobs`
+
+## List Contacts
+
+> Response
+
+```json
+{
+  "contacts": [
+      {
+          "id": 1,
+          "first_name": "John",
+          "last_name": "Doe",
+          "relationship": "Landlord",
+          "contact_methods": [
+              {
+                  "id": 12,
+                  "method": "phone",
+                  "value": "+15557483859",
+                  "notify": false,
+                  "contact_id": 1,
+              }
+          ],
+          "address": null
+      },
+      {
+          "id": 2,
+          "first_name": "Jane",
+          "last_name": "Doe",
+          "relationship": "Tenant",
+          "contact_methods": [
+              {
+                  "id": 23,
+                  "method": "email",
+                  "value": "email@test.com",
+                  "notify": true,
+                  "contact_id": 2,
+              },
+              {
+                  "id": 34,
+                  "method": "email",
+                  "value": "email2@test.com",
+                  "notify": false,
+                  "contact_id": 2,
+              },
+          ],
+          "address": null
+      }
+  ],
+}
+```
+
+To list all the contacts associated with a particular job, perform a GET request to the contacts endpoint using the job `id`.
+
+`GET /v3/jobs/:id/contacts`
+
+## Update Contacts
+
+> Request
+
+```json
+{
+  "contacts": [
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "primary": true,
+      "relationship": "Landlord",
+      "address": {
+        "street_1": "1234 Test Avenue",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02115",
+        "timezone": "America/New_York"
+      },
+      "contact_methods": [
+        {
+          "method": "phone",
+          "value": "+1553442466",
+          "notify": true
+        },
+        {
+          "method": "email",
+          "value": "email1@test.com",
+          "notify": false
+        }
+      ]
+    }
+  ]
+}
+```
+To update all the contacts on a job (edit, remove or add), you can PATCH the contacts endpoint for that specific job `id` with all of the new contacts and corrected information.
+
+`PATCH /v3/jobs/:id/contacts`
+
+## Update Single Contact
+
+> Request
+
+```json
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "primary": true,
+  "relationship": "Landlord",
+  "address": {
+    "street_1": "1234 Test Avenue",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "contact_methods": [
+    {
+      "method": "phone",
+      "value": "+1553442466",
+      "notify": true
+    },
+    {
+      "method": "email",
+      "value": "email1@test.com",
+      "notify": false
+    }
+  ]
+}
+
+```
+
+To update a specific contact individually, use that contact's `id` in your request endpoint and supply the new information.
+
+`PATCH to v3/jobs/:id/contacts/:id`
+
+
+## Update Contact Methods
+
+> Request
+
+```json
+{
+  "contact_methods": [
+    {
+        "id": 1,
+        "method": "phone",
+        "value": "+15557483859",
+        "notify": true
+    },
+    {
+        "id": 2,
+        "method": "email",
+        "value": "email@test.com",
+        "notify": true
+    },
+    {
+        "id": 3,
+        "method": "email",
+        "value": "email2@test.com",
+        "notify": false
+    },
+  ]
+}
+```
+To update a contact's contact methods, perform a PATCH to the contacts endpoint using the contact's `id`. In the request, provide all of the new or updated contact methods along with their existing ids, if present.
+
+<aside class="info">Note that for existing contact methods, you must provide their existing contact_method `id` along with them in the body to ensure they are updated appropriately.</aside>
+
+`PATCH to v3/jobs/:id/contacts/:id`
+
 # Location Entity <a name="location-schema"></a>
-Locations are not business objects in our system, but are attributes on several of our core business objects. 
+Locations are not business objects in our system, but are attributes on several of our core business objects.
 
 Currently Dispatch only supports locations in the US and Canada.
 
@@ -939,7 +1310,7 @@ attribute | type | notes
 street_1 | string | required
 street_2 | string |
 city | string | required
-state | enum&laquo;string&raquo; | two-character abbreviation for the state. 
+state | enum&laquo;string&raquo; | two-character abbreviation for the state.
 postal_code | string | 5-digit US or 6-character Canadian postal code
 timezone | enum&laquo;string&raquo; | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
 
@@ -1145,7 +1516,7 @@ Survey responses are submitted by customers via our customer portal. They're sen
 
 Attribute | Type  | Description
 --------- | ---- | -----------
-job_id | int | 
+job_id | int |
 appointment_id | int | ID of the parent appointment. May be `null`, if there was no appointment.
 rating | int | 0-5 rating from the customer
 message | string | Additional feedback from the customer
