@@ -48,7 +48,7 @@ Entity | Description
 [Organization](#organizations) | Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.
 [Appointment](#appointments) | Scheduled times at which an assigned [user](#users) (technician) will perform the work for the job
 [User](#users) | Users are the users of our application. Currently we have 2 types of users: the **dispatcher** and the **technician**. Users can also have both roles if it makes sense for your use case. We have separate mobile applications for each role, as well as a single desktop web application for dispatchers to manage their workforce from the office.
-[Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed. 
+[Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed.
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
 
@@ -278,7 +278,7 @@ user_id_null | Show appointments that are unassigned (value should be `true` her
     "time": "2017-01-01T00:00:00Z",
     "duration": 3600,
     "user_id": 456
-  } 
+  }
 }
 ```
 
@@ -596,7 +596,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 `GET /v3/datafiles/:uid`
 
 # <a name="jobs"></a> Jobs
-Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done. 
+Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done.
 
 ## Attributes
 
@@ -627,7 +627,7 @@ complete | The job has finished
 canceled | The job is canceled - work no longer needs to be done.
 
 ## Job Offers
-If your workflow includes **offering** the job to an organization and requiring them to accept or reject it, you can create a job with status set to "offered", which is a special status that has slightly different behavior in our applications. 
+If your workflow includes **offering** the job to an organization and requiring them to accept or reject it, you can create a job with status set to "offered", which is a special status that has slightly different behavior in our applications.
 
 ### <a name="accept-reject-behalf"></a>Accepting/Rejecting on behalf of Organization
 
@@ -643,7 +643,7 @@ If your workflow includes **offering** the job to an organization and requiring 
 }
 ```
 
-Dispatchers can accept and reject job offers via our application. However, if you have another mechanism for job offer interaction, and want to keep the Dispatch system up to date, you can do so by making a `POST` request to either `/v3/jobs/:id/accept` or `/v3/jobs/:id/reject`. 
+Dispatchers can accept and reject job offers via our application. However, if you have another mechanism for job offer interaction, and want to keep the Dispatch system up to date, you can do so by making a `POST` request to either `/v3/jobs/:id/accept` or `/v3/jobs/:id/reject`.
 
 For accepting, if you provide appointment information, the job will move into "scheduled" status. Otherwise, it will move into "unscheduled".
 
@@ -824,10 +824,14 @@ As a job source, your workflow may require you to create an organization record,
 }
 ```
 
+### Example
+`GET /v3/jobs?filter[source_id_eq]=:id`
+
 ### Query Parameters
 Parameter | Description
 --------- | -----------
 brand_id_eq | Show jobs in a certain brand
+source_id_eq | Show jobs in a certain source
 customer_id_eq | Show jobs for a certain customer
 customer_id_in | Show jobs for a group of customers
 external_ids_contains | Show jobs with a certain external ID
@@ -872,7 +876,7 @@ status_not_eq | Show jobs that are not in a certain status
         }
       ]
     }
-  } 
+  }
 }
 ```
 
@@ -930,7 +934,7 @@ status_not_eq | Show jobs that are not in a certain status
 <aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
 
 # Location Entity <a name="location-schema"></a>
-Locations are not business objects in our system, but are attributes on several of our core business objects. 
+Locations are not business objects in our system, but are attributes on several of our core business objects.
 
 Currently Dispatch only supports locations in the US and Canada.
 
@@ -939,7 +943,7 @@ attribute | type | notes
 street_1 | string | required
 street_2 | string |
 city | string | required
-state | enum&laquo;string&raquo; | two-character abbreviation for the state. 
+state | enum&laquo;string&raquo; | two-character abbreviation for the state.
 postal_code | string | 5-digit US or 6-character Canadian postal code
 timezone | enum&laquo;string&raquo; | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
 
@@ -1145,7 +1149,7 @@ Survey responses are submitted by customers via our customer portal. They're sen
 
 Attribute | Type  | Description
 --------- | ---- | -----------
-job_id | int | 
+job_id | int |
 appointment_id | int | ID of the parent appointment. May be `null`, if there was no appointment.
 rating | int | 0-5 rating from the customer
 message | string | Additional feedback from the customer
