@@ -1129,7 +1129,7 @@ notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't
             "country": "United States",
             "timezone": "America/New_York",
             "latitude": 42.3450151,
-            "longitude": -71.0877962,
+            "longitude": -71.0877962
         },
         "contacts": [
             {
@@ -1143,14 +1143,14 @@ notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't
                         "method": "email",
                         "value": "email1@test.com",
                         "notify": false,
-                        "contact_id": 1,
+                        "contact_id": 1
                     },
                     {
                         "id": 11,
                         "method": "phone",
                         "value": "+1553442466",
                         "notify": true,
-                        "contact_id": 1,
+                        "contact_id": 1
                     }
                 ],
                 "address": null
@@ -1166,14 +1166,14 @@ notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't
                         "method": "email",
                         "value": "email2@test.com",
                         "notify": true,
-                        "contact_id": 2,
+                        "contact_id": 2
                     },
                     {
                         "id": 13,
                         "method": "phone",
                         "value": "+15553442466",
                         "notify": false,
-                        "contact_id": 2,
+                        "contact_id": 2
                     }
                 ],
                 "address": null
@@ -1195,48 +1195,48 @@ The POST to create a job with contacts simply adds an additional array on top of
 
 ```json
 {
-  "contacts": [
-      {
-          "id": 1,
-          "first_name": "John",
-          "last_name": "Doe",
-          "relationship": "Landlord",
-          "contact_methods": [
-              {
-                  "id": 12,
-                  "method": "phone",
-                  "value": "+15557483859",
-                  "notify": false,
-                  "contact_id": 1,
-              }
-          ],
-          "address": null
-      },
-      {
-          "id": 2,
-          "first_name": "Jane",
-          "last_name": "Doe",
-          "relationship": "Tenant",
-          "contact_methods": [
-              {
-                  "id": 23,
-                  "method": "email",
-                  "value": "email@test.com",
-                  "notify": true,
-                  "contact_id": 2,
-              },
-              {
-                  "id": 34,
-                  "method": "email",
-                  "value": "email2@test.com",
-                  "notify": false,
-                  "contact_id": 2,
-              },
-          ],
-          "address": null
-      }
-  ],
-}
+   "contacts": [
+       {
+           "id": 1,
+           "first_name": "John",
+           "last_name": "Doe",
+           "relationship": "Landlord",
+           "contact_methods": [
+               {
+                   "id": 12,
+                   "method": "phone",
+                   "value": "+15557483859",
+                   "notify": false,
+                   "contact_id": 1
+               }
+           ],
+           "address": null
+       },
+       {
+           "id": 2,
+           "first_name": "Jane",
+           "last_name": "Doe",
+           "relationship": "Tenant",
+           "contact_methods": [
+               {
+                   "id": 23,
+                   "method": "email",
+                   "value": "email@test.com",
+                   "notify": true,
+                   "contact_id": 2
+               },
+               {
+                   "id": 34,
+                   "method": "email",
+                   "value": "email2@test.com",
+                   "notify": false,
+                   "contact_id": 2
+               }
+           ],
+           "address": null
+       }
+   ]
+ }
 ```
 
 To list all the contacts associated with a particular job, perform a GET request to the contacts endpoint using the job `id`.
