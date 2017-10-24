@@ -807,7 +807,57 @@ As a job source, your workflow may require you to create an organization record,
 
 `POST /v3/jobs/factory`
 
-`POST /v3/jobs`
+## Add customer-suggested times to a job
+
+> Request
+
+```json
+{
+  "time_windows": [
+    {
+      "start_time": "RFC3339 Timestamp",
+      "end_time": "RFC3339 Timestamp"
+    },
+    {
+      "start_time": "RFC3339 Timestamp",
+      "end_time": "RFC3339 Timestamp"
+    },
+    {
+      "start_time": "RFC3339 Timestamp",
+      "end_time": "RFC3339 Timestamp"
+    }
+  ]
+}
+```
+
+> Response
+
+```json
+{
+  "time_windows": {
+    "job_id": 123,
+    "created_at": "2017-10-21T00:00:00Z",
+    "time_windows": [
+      {
+        "start_time": "RFC3339 Timestamp",
+        "end_time": "RFC3339 Timestamp"
+      },
+      {
+        "start_time": "RFC3339 Timestamp",
+        "end_time": "RFC3339 Timestamp"
+      },
+      {
+        "start_time": "RFC3339 Timestamp",
+        "end_time": "RFC3339 Timestamp"
+      }
+    ]
+  }
+}
+```
+
+Your customer-facing workflow may include a discussion about potential times for a visit from the service provider. In that case, once you create the job, you can send Dispatch up to 3 time windows that will be shown to the dispatcher in the Dispatch application.
+
+`POST /v3/jobs/:job_id/time_windows`
 
 ## List Jobs
 
@@ -827,10 +877,14 @@ As a job source, your workflow may require you to create an organization record,
 }
 ```
 
+### Example
+`GET /v3/jobs?filter[source_id_eq]=:id`
+
 ### Query Parameters
 Parameter | Description
 --------- | -----------
 brand_id_eq | Show jobs in a certain brand
+source_id_eq | Show jobs in a certain source
 customer_id_eq | Show jobs for a certain customer
 customer_id_in | Show jobs for a group of customers
 external_ids_contains | Show jobs with a certain external ID
