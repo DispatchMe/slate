@@ -558,13 +558,18 @@ organization_id_eq | Find a customer for a specific organization
 `DELETE /v3/customers/:id`
 
 # <a name="files-photos"></a> Files and Photos
-You can upload photos and other files to share with service providers and customers using our `/v3/datafiles` endpoint.
+You can upload photos and other files to share with service providers and customers using our Files API. 
+
+<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
+
+
+Files can be accessed at the `/v1/datafiles` endpoint in the Files API.
 
 ## <a name="upload-photo"></a>Uploading a file
 > Request
 
 ```curl
-curl -H "Authorization: Bearer <token>" -F file=@test.png https://api.dispatch.me/v3/datafiles
+curl -H "Authorization: Bearer <token>" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
 
 ```
 
@@ -583,7 +588,7 @@ curl -H "Authorization: Bearer <token>" -F file=@test.png https://api.dispatch.m
 }
 ```
 
-`POST` using `Content-Type: multipart/form-data` to `/v3/datafiles`
+`POST` using `Content-Type: multipart/form-data` to `/v1/datafiles`
 
 ## View a file by UID
 > Response
@@ -593,7 +598,7 @@ HTTP/1.1 302 Found
 Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
 ```
 
-`GET /v3/datafiles/:uid`
+`GET /v1/datafiles/:uid`
 
 # <a name="jobs"></a> Jobs
 Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done.
