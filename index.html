@@ -897,14 +897,18 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <h1 id="files-and-photos"><a name="files-photos"></a> Files and Photos</h1>
 
-<p>You can upload photos and other files to share with service providers and customers using our <code class="prettyprint">/v3/datafiles</code> endpoint.</p>
+<p>You can upload photos and other files to share with service providers and customers using our Files API. </p>
+
+<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
+
+<p>Files can be accessed at the <code class="prettyprint">/v1/datafiles</code> endpoint in the Files API.</p>
 
 <h2 id="uploading-a-file"><a name="upload-photo"></a>Uploading a file</h2>
 
 <blockquote>
 <p>Request</p>
 </blockquote>
-<pre class="highlight plaintext"><code>curl -H "Authorization: Bearer &lt;token&gt;" -F file=@test.png https://api.dispatch.me/v3/datafiles
+<pre class="highlight plaintext"><code>curl -H "Authorization: Bearer &lt;token&gt;" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
 
 </code></pre>
 <blockquote>
@@ -921,7 +925,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p><code class="prettyprint">POST</code> using <code class="prettyprint">Content-Type: multipart/form-data</code> to <code class="prettyprint">/v3/datafiles</code></p>
+<p><code class="prettyprint">POST</code> using <code class="prettyprint">Content-Type: multipart/form-data</code> to <code class="prettyprint">/v1/datafiles</code></p>
 
 <h2 id="view-a-file-by-uid">View a file by UID</h2>
 
@@ -931,7 +935,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 <pre class="highlight plaintext"><code>HTTP/1.1 302 Found
 Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
 </code></pre>
-<p><code class="prettyprint">GET /v3/datafiles/:uid</code></p>
+<p><code class="prettyprint">GET /v1/datafiles/:uid</code></p>
 
 <h1 id="jobs"><a name="jobs"></a> Jobs</h1>
 
