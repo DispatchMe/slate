@@ -43,6 +43,7 @@ Here's a brief description of our business objects and their role in the Dispatc
 
 Entity | Description
 ------ | -----------
+[Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Job](#jobs) | A single body of work for a [customer](#customers), assigned to an [organization](#organization).
 [Customer](#customers) | A job currently belongs to a single customer, representing the homeowner.
 [Organization](#organizations) | Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.
@@ -407,6 +408,390 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </aside>
 
 `DELETE /v3/brands/:id`
+# <a name="work-orders"></a> Work Orders
+Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball". 
+
+You can **create**, **update**, and **cancel** work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.
+
+## Work Order Object
+
+```json
+{
+  "title": "PLB 123: Fix the Toilet",
+  "description": "## Job Info\n* Dog attacked the last guy",
+  "service_type": "PLB",
+  "orchestration": "direct_offer",
+  "external_id": "AAA123",
+  "location": {
+    "street_1": "1234 Test Avenue",
+    "street_2": "Apt 2",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "appointment_windows": [
+    {
+      "start_time": "2017-01-01T05:00:00Z",
+      "end_time": "2017-01-01T07:00:00Z"
+    },
+    {
+      "start_time": "2017-01-01T11:00:00Z",
+      "end_time": "2017-01-01T13:00:00Z"
+    }
+  ],
+  "contacts": [
+    {
+      "first_name": "Testy",
+      "last_name": "McGee",
+      "company_name": "Widgets, Inc.",
+      "external_id": "BBB456",
+      "primary": true,
+      "notes": "This person is really nice",
+      "phone_numbers": [
+        {
+          "label": "mobile",
+          "value": "+15551234567",
+          "preferred": true
+        }
+      ],
+      "email_addresses": [
+        {
+          "label": "work",
+          "value": "testy.mcgee@widgets.com",
+          "preferred": true
+        }
+      ]
+    }
+  ],
+  "organizations": [
+    {
+      "name": "Joe's Plumbing",
+      "address": {
+        "street_1": "5555 Test Street",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02114",
+        "timezone": "America/New_York"
+      },
+      "phone_number": "+15558889999",
+      "email": "joe@joesplumbing.com",
+      "external_id": "CCC789"
+    }
+  ]
+}
+```
+
+attribute | type | notes
+--------- | ---- | -----
+title | `string` | required
+description | `string` | markdown is supported
+service_type | `string` | Type of service to be performed
+brand_id | `integer` | Optionally assign to a [brand](#brands) within your account. <br/>This is the brand's ID in the Dispatch system.
+orchestration | `enum<string>` | See [orchestration algorithms](#orchestration-algorithms)
+external_id | `string` | ID for the work order in your system. See [external ids](#external-ids)
+location | `Location` | Location of the work. [Location entity schema](#location-schema)
+appointment_windows | `array<AppointmentWindow>` | Optionally provide appointment windows for the <br/>organization to choose from. <br/>[AppointmentWindow entity schema](#appointment-window-schema)
+contacts | `array<Contact>` | List of contacts for the work order. [Contact entity schema](#contact-schema)
+organizations | `array<Organization>` | List of organizations to send/offer the work to. <br/>Note that in "direct_*" orchestration only a single <br />organization is permitted. [Organization entity schema](#organization-schema)
+
+## <a name="orchestration-algorithms"></a>Orchestration Algorithms
+
+Algorithm | Description
+--------- | -----------
+direct_offer | Offer the job to a single organization. Job starts in "offered" status.
+direct_assign | Assign the job to a single organization. Job starts in "unscheduled" status.
+round_robin | **Coming Soon!**
+jump_ball | **Coming Soon!**
+
+## Location Entity <a name="location-schema"></a>
+Locations are not business objects in our system, but are attributes on several of our core business objects. 
+
+Currently Dispatch only supports locations in the US and Canada.
+
+attribute | type | notes
+--------- | ---- | -----
+street_1 | `string` | required
+street_2 | `string` |
+city | `string` | required
+state | `enum<string>` | two-character abbreviation for the state. 
+postal_code | `string` | 5-digit US or 6-character Canadian postal code
+timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
+external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
+
+## Appointment Window Entity <a name="appointment-window-schema"></a>
+
+attribute | type | notes
+--------- | ---- | -----
+start_time | `string` | ISO8601 timestamp
+end_time | `string` | ISO8601 timestamp
+
+## Organization Entity <a name="organization-schema"></a>
+
+We will attempt to look up the organization in our system using, in order:
+
+* `id` (Dispatch's ID)
+* `external_id` (your system's ID)
+* name + address + email + phone number
+
+If we find the organization, we will use the record we already have, since they may have already logged into Dispatch and be managing their jobs and we don't want to create another account for them. If we don't find the record, we will create a new one with the data you provide.
+
+Note that if you are sure that the organization already exists in Dispatch, you **only** need to provide either the `id` or `external_id` fields. However, we recommend that you provide all data to avoid any errors.
+
+attribute | type | notes
+--------- | ---- | -----
+name | `string` | Name of the organization.
+address | `Location` |
+email | `string` | Email address for the organization's office
+phone_number | `string` | Phone number in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
+external_id | `string` | ID for the organization in your system. [external ids](#external-ids)
+id | `int` | ID for the organization in Dispatch. Provide if you know it, otherwise omit.
+
+## Contact Entity <a name="contact-schema"></a>
+
+A contact is any person who the organization may need to get in touch with over the lifecycle of the work order.
+
+attribute | type | notes
+--------- | ---- | -----
+first_name | `string` |
+last_name | `string` |
+company_name | `string` |
+external_id | `string` | ID(s) for the contact in your system. See [external ids](#external-ids)
+primary | `bool` | You must designate a single primary contact (set to `true`) <br/>per work order. This person will be able to log in to the customer  <br/> portal, suggest appointment windows, and provide feedback at <br/>the end of the appointment.
+notes | `string` |
+billing_address | `Location` | Optional billing address for this contact.
+email_addresses | `array<ContactMethod>` | List of email addresses for this contact. [Contact method schema](#contact-method-schema) 
+phone_numbers | `array<ContactMethod>` | List of phone numbers for this contact. [Contact method schema](#contact-method-schema) 
+
+### Contact Method Entity <a name="contact-method-schema"></a>
+
+attribute | type | notes
+--------- | ---- | -----
+label | `string` | E.g. "work", "fax", "mobile", "home"
+value | `string` | Either the email address or phone number. <br />Phone number must be in [RFC3966 format](https://www.ietf.org/rfc/rfc3966.txt)
+preferred | `bool` | If `true`, this phone number or email address will <br />be used to allow this person to log in to the Dispatch system.
+
+## Create a Work Order
+> Response
+
+```json
+{
+  "id": 123,
+  "created_at": "ISO8601 Timestamp",
+  "updated_at": "ISO8601 Timestamp",
+  "data": {
+    "title": "",
+    "location": {},
+    "description": "",
+    "service_type": "",
+    "contacts": [...],
+    "organizations": [
+      {
+        "id": 2,
+        "customer_id": 4
+      }
+    ]
+  }
+}
+```
+
+`POST /v3/work_orders`
+
+This process does the following:
+
+* Create or identify the organization (see [organization entity documentation](#organization-entity))
+* Create or identify the customer, using the contact marked as `primary: true`. When we support multiple contacts on a job, we will use all of the provided contacts instead of just the primary.
+* Create a new job for that organization and customer.
+* If `appointment_windows` are provided, adds customer suggested times to the job, which will appear to the dispatcher in our application.
+
+Using the ID returned to you upon a successful `POST`, you can update or cancel the work order (see below)
+
+## Update a Work Order
+`PATCH /v3/work_orders/:id`
+
+You can update individual fields, such as just the `location` or just the `description`, or provide the entire work order document as you would in a `POST`.
+
+<aside class="warning">You cannot change the assigned organization of a Work Order after it is created. Instead, we recommend that you cancel the Work Order and create a new one with the correct assignment.</aside>
+
+## Cancel a Work Order
+`POST /v3/work_orders/:id/cancel`
+
+This will cancel the underlying job and any appointments.
+
+## Migrating from Job Offers
+
+> Old Job Offer
+
+```json
+{
+  "offer_strategy": "direct",
+  "duration": -1,
+  "job": {
+    "title": "Fix the Sink",
+    "description": "The sink needs fixing.",
+    "service_type": "PLB",
+    "external_id": "AAA123",
+    "address": {
+      "street_1": "1234 Test Avenue",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02114"
+    }
+  },
+  "appointment": {
+    "window_start_time": ["2017-01-01T05:00:00Z", "2017-01-01T11:00:00Z"],
+    "window_end_time": ["2017-01-01T07:00:00Z", "2017-01-01T13:00:00Z"]
+  },
+  "customer": {
+    "first_name": "Joe",
+    "last_name": "Shmo",
+    "email": "joe.shmo@email.com",
+    "phone_numbers": [
+      {
+        "number": "+15551234567",
+        "type": "mobile",
+        "primary": true
+      },
+      {
+        "number": "+15559876543",
+        "type": "home",
+        "primary": false
+      }
+    ],
+    "external_id": "BBB456",
+    "billing_address": {
+      "street_1": "5555 Test Avenue",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115"
+    }
+  },
+  "entities": [
+    {
+      "type": "organization",
+      "id": 123,
+      "external_id": "CCC789",
+      "data": {
+        "name": "Jim's Plumbing",
+        "email": "jim@jimsplumbing.com",
+        "phone_number": "+15558887777",
+        "address": {
+          "street_1": "9876 Test Avenue",
+          "city": "Boston",
+          "state": "MA",
+          "postal_code": "02113"
+        }
+      }
+    }
+  ]
+}
+```
+> New Work Order
+
+```json
+{
+  "orchestration": "direct_offer",
+  "title": "Fix the Sink",
+  "description": "The sink needs fixing",
+  "service_type": "PLB",
+  "external_id": "AAA123",
+  "location": {
+    "street_1": "1234 Test Avenue",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02114"
+  },
+  "appointment_windows": [
+    {
+            "start_time": "2017-01-01T05:00:00Z",
+            "end_time": "2017-01-01T07:00:00Z"
+        },
+        {
+            "start_time": "2017-01-01T11:00:00Z",
+            "end_time": "2017-01-01T13:00:00Z"
+        }
+  ],
+  "organizations": [
+    {
+      "id": 123,
+      "external_id": "CCC789",
+      "name": "Jim's Plumbing",
+      "address": {
+        "street_1": "9876 Test Avenue",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02113"
+      },
+      "phone_number": "+15558887777",
+      "email": "jim@jimsplumbing.com"
+    }
+  ],
+  "contacts": [
+    {
+      "first_name": "Joe",
+      "last_name": "Shmo",
+      "primary": true,
+      "billing_address": {
+        "street_1": "5555 Test Avenue",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02115"
+      },
+      "external_id": "BBB456",
+      "email_addresses": [
+        {
+          "preferred": true,
+          "value": "joe.shmo@email.com"
+        }
+      ],
+      "phone_numbers": [
+        {
+          "label": "mobile",
+          "value": "+15551234567",
+          "preferred": true
+        },
+        {
+          "label": "home",
+          "preferred": false,
+          "value": "+15559876543"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Note that since we now support multiple contacts per work order, the single `customer` record on Job Offers can be mapped to the first member of the `contacts` array, marked as `"primary": true`.
+
+job offer attribute | work order attribute | notes
+------------------- | -------------------- | -----
+`offer_strategy` | `orchestration` | See [orchestration algorithms](#orchestration-algorithms)
+`duration` | - | Expiration is no longer supported
+`duration_algorithm` | - | Expiration is no longer supported
+`ui_options` | - | These are now configurable on a per-account basis rather than for each work order. Please speak with your account manager for details.
+`entities.$.type` | - | Work orders can only be sent to organizations
+`entities.$.id` | `organizations.$.id`
+`entities.$.external_id` | `organizations.$.external_id` |
+`entities.$.data.name` | `organizations.$.name` |
+`entities.$.data.address` | `organizations.$.address` |
+`entities.$.data.email` | `organizations.$.email` |
+`entities.$.data.phone_number` | `organizations.$.phone_number`
+`job.title` | `title` |
+`job.description` | `description` |
+`job.service_type` | `service_type` |
+`job.external_id` | `external_id` |
+`job.address` | `location` |
+`customer.first_name` | `contacts[0].first_name` |
+`customer.last_name` | `contacts[0].last_name` |
+`customer.email` | `contacts[0].email_addresses.$.value` | Set this contact method to `preferred:true`
+`customer.phone_numbers.$.number` | `contacts[0].phone_numbers.$.value` | 
+`customer.phone_numbers.$.type` | `contacts[0].phone_numbers.$.label` |
+`customer.phone_numbers.$.primary` | `contacts[0].phone_numbers.$.preferred` |
+`customer.external_id` | `contacts[0].external_id` |
+`customer.billing_address` | `contacts[0].billing_address` |
+`customer.home_address` | - | No need for home address anymore - this is taken from the work order's location.
+`appointment.window_start_time.$` | `appointment_windows.$.start_time` |
+`appointment.window_end_time.$` | `appointment_windows.$.end_time` |
 
 # <a name="customers"></a> Customers
 Customers represent the homeowner, landlord or other entity the work is being done for. Customers in Dispatch belong to individual organizations, so if you have multiple organizations doing work for the same customer in your system, there will be multiple instances of that customer in Dispatch. We do this to allow organizations to keep their own notes and make their own updates to customer data without affecting other organizations.
