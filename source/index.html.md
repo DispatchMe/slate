@@ -43,7 +43,6 @@ Here's a brief description of our business objects and their role in the Dispatc
 
 Entity | Description
 ------ | -----------
-[Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Job](#jobs) | A single body of work for a [customer](#customers), assigned to an [organization](#organization).
 [Customer](#customers) | A job currently belongs to a single customer, representing the homeowner.
 [Organization](#organizations) | Jobs are assigned to a single organization, who is responsible for doing the work. Depending on your business model, this could be a branch of your business, or a third-party service provider you have an agreement with.
@@ -52,6 +51,9 @@ Entity | Description
 [Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed.
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
+[MarketingAttributions](#marketing-attributions) | A list of marketing attributions associated with a [job](#job).
+[Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
+[Files & Photos](#files-photos) | The files and photos associated with a [job](#jobs).
 
 ## <a name="external-ids"></a>External IDs
 
@@ -137,7 +139,7 @@ Use this method to authenticate a single service provider. We recommend you crea
 `POST /v3/oauth/token`
 
 
-## Refreshing your Token
+## Refresh A Token
 
 > Request:
 
@@ -408,124 +410,6 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </aside>
 
 `DELETE /v3/brands/:id`
-# <a name="work-orders"></a> Work Orders
-Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball". 
-
-You can **create**, **update**, and **cancel** work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.
-
-## Work Order Object
-
-```json
-{
-  "title": "PLB 123: Fix the Toilet",
-  "description": "## Job Info\n* Dog attacked the last guy",
-  "service_type": "PLB",
-  "orchestration": "direct_offer",
-  "external_id": "AAA123",
-  "location": {
-    "street_1": "1234 Test Avenue",
-    "street_2": "Apt 2",
-    "city": "Boston",
-    "state": "MA",
-    "postal_code": "02115",
-    "timezone": "America/New_York"
-  },
-  "appointment_windows": [
-    {
-      "start_time": "2017-01-01T05:00:00Z",
-      "end_time": "2017-01-01T07:00:00Z"
-    },
-    {
-      "start_time": "2017-01-01T11:00:00Z",
-      "end_time": "2017-01-01T13:00:00Z"
-    }
-  ],
-  "contacts": [
-    {
-      "first_name": "Testy",
-      "last_name": "McGee",
-      "company_name": "Widgets, Inc.",
-      "external_id": "BBB456",
-      "primary": true,
-      "notes": "This person is really nice",
-      "phone_numbers": [
-        {
-          "label": "mobile",
-          "value": "+15551234567",
-          "preferred": true
-        }
-      ],
-      "email_addresses": [
-        {
-          "label": "work",
-          "value": "testy.mcgee@widgets.com",
-          "preferred": true
-        }
-      ]
-    }
-  ],
-  "organizations": [
-    {
-      "name": "Joe's Plumbing",
-      "address": {
-        "street_1": "5555 Test Street",
-        "city": "Boston",
-        "state": "MA",
-        "postal_code": "02114",
-        "timezone": "America/New_York"
-      },
-      "phone_number": "+15558889999",
-      "email": "joe@joesplumbing.com",
-      "external_id": "CCC789"
-    }
-  ]
-}
-```
-
-attribute | type | notes
---------- | ---- | -----
-title | `string` | required
-description | `string` | markdown is supported
-service_type | `string` | Type of service to be performed
-brand_id | `integer` | Optionally assign to a [brand](#brands) within your account. <br/>This is the brand's ID in the Dispatch system.
-orchestration | `enum<string>` | See [orchestration algorithms](#orchestration-algorithms)
-external_id | `string` | ID for the work order in your system. See [external ids](#external-ids)
-location | `Location` | Location of the work. [Location entity schema](#location-schema)
-appointment_windows | `array<AppointmentWindow>` | Optionally provide appointment windows for the <br/>organization to choose from. <br/>[AppointmentWindow entity schema](#appointment-window-schema)
-contacts | `array<Contact>` | List of contacts for the work order. [Contact entity schema](#contact-schema)
-organizations | `array<Organization>` | List of organizations to send/offer the work to. <br/>Note that in "direct_*" orchestration only a single <br />organization is permitted. [Organization entity schema](#organization-schema)
-
-## <a name="orchestration-algorithms"></a>Orchestration Algorithms
-
-Algorithm | Description
---------- | -----------
-direct_offer | Offer the job to a single organization. Job starts in "offered" status.
-direct_assign | Assign the job to a single organization. Job starts in "unscheduled" status.
-round_robin | **Coming Soon!**
-jump_ball | **Coming Soon!**
-
-## Location Entity <a name="location-schema"></a>
-Locations are not business objects in our system, but are attributes on several of our core business objects. 
-
-Currently Dispatch only supports locations in the US and Canada.
-
-attribute | type | notes
---------- | ---- | -----
-street_1 | `string` | required
-street_2 | `string` |
-city | `string` | required
-state | `enum<string>` | two-character abbreviation for the state. 
-postal_code | `string` | 5-digit US or 6-character Canadian postal code
-timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
-external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
-
-## Appointment Window Entity <a name="appointment-window-schema"></a>
-
-attribute | type | notes
---------- | ---- | -----
-start_time | `string` | ISO8601 timestamp
-end_time | `string` | ISO8601 timestamp
-
 ## Organization Entity <a name="organization-schema"></a>
 
 We will attempt to look up the organization in our system using, in order:
@@ -628,11 +512,11 @@ This will cancel the underlying job and any appointments.
   "duration": -1,
   "job": {
     "title": "Fix the Sink",
-    "description": "The sink needs fixing.",
-    "service_type": "PLB",
+    "description": "Dripping faucet..",
+    "service_type": "hvac",
     "external_id": "AAA123",
     "address": {
-      "street_1": "1234 Test Avenue",
+      "street_1": "1 Some Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02114"
@@ -643,9 +527,9 @@ This will cancel the underlying job and any appointments.
     "window_end_time": ["2017-01-01T07:00:00Z", "2017-01-01T13:00:00Z"]
   },
   "customer": {
-    "first_name": "Joe",
-    "last_name": "Shmo",
-    "email": "joe.shmo@email.com",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@email.com",
     "phone_numbers": [
       {
         "number": "+15551234567",
@@ -660,7 +544,7 @@ This will cancel the underlying job and any appointments.
     ],
     "external_id": "BBB456",
     "billing_address": {
-      "street_1": "5555 Test Avenue",
+      "street_1": "5555 Another Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02115"
@@ -676,7 +560,7 @@ This will cancel the underlying job and any appointments.
         "email": "jim@jimsplumbing.com",
         "phone_number": "+15558887777",
         "address": {
-          "street_1": "9876 Test Avenue",
+          "street_1": "9876 Another Pl.",
           "city": "Boston",
           "state": "MA",
           "postal_code": "02113"
@@ -692,11 +576,11 @@ This will cancel the underlying job and any appointments.
 {
   "orchestration": "direct_offer",
   "title": "Fix the Sink",
-  "description": "The sink needs fixing",
-  "service_type": "PLB",
+  "description": "Dripping faucet.",
+  "service_type": "hvac",
   "external_id": "AAA123",
   "location": {
-    "street_1": "1234 Test Avenue",
+    "street_1": "1 Some Pl.",
     "city": "Boston",
     "state": "MA",
     "postal_code": "02114"
@@ -717,7 +601,7 @@ This will cancel the underlying job and any appointments.
       "external_id": "CCC789",
       "name": "Jim's Plumbing",
       "address": {
-        "street_1": "9876 Test Avenue",
+        "street_1": "9876 Another Pl.",
         "city": "Boston",
         "state": "MA",
         "postal_code": "02113"
@@ -728,11 +612,11 @@ This will cancel the underlying job and any appointments.
   ],
   "contacts": [
     {
-      "first_name": "Joe",
-      "last_name": "Shmo",
+      "first_name": "Jane",
+      "last_name": "Doe",
       "primary": true,
       "billing_address": {
-        "street_1": "5555 Test Avenue",
+        "street_1": "5555 Another Pl.",
         "city": "Boston",
         "state": "MA",
         "postal_code": "02115"
@@ -741,7 +625,7 @@ This will cancel the underlying job and any appointments.
       "email_addresses": [
         {
           "preferred": true,
-          "value": "joe.shmo@email.com"
+          "value": "jane.doe@email.com"
         }
       ],
       "phone_numbers": [
@@ -838,8 +722,8 @@ type | string | E.g. "Mobile", "Work"
       "type": "work"
     }
   ],
-  "first_name": "Joe",
-  "last_name": "Shmo",
+  "first_name": "Jane",
+  "last_name": "Doe",
   "external_ids": ["AAA123"]
 }
 ```
@@ -864,8 +748,8 @@ type | string | E.g. "Mobile", "Work"
         "type": "work"
       }
     ],
-    "first_name": "Joe",
-    "last_name": "Shmo",
+    "first_name": "Jane",
+    "last_name": "Doe",
     "external_ids": ["AAA123"]
   }
 }
@@ -906,7 +790,7 @@ Note that when you attempt to create a customer, we may find a duplicate of that
       }
     ],
     "first_name": "Changed",
-    "last_name": "Shmo",
+    "last_name": "Doe",
     "external_ids": ["AAA123"]
   }
 }
@@ -941,49 +825,6 @@ organization_id_eq | Find a customer for a specific organization
 
 ## Delete a Customer
 `DELETE /v3/customers/:id`
-
-# <a name="files-photos"></a> Files and Photos
-You can upload photos and other files to share with service providers and customers using our Files API. 
-
-<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
-
-
-Files can be accessed at the `/v1/datafiles` endpoint in the Files API.
-
-## <a name="upload-photo"></a>Uploading a file
-> Request
-
-```curl
-curl -H "Authorization: Bearer <token>" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
-
-```
-
-> Response
-
-```json
-{
-  "datafile": {
-    "bucket_id": null,
-    "created_at": "2017-07-19T01:42:48Z",
-    "filename": "test.png",
-    "mime_type": "image/png",
-    "name": "",
-    "uid": "fe9194b3-3cc2-4862-af52-d8b59f7dd062"
-  }
-}
-```
-
-`POST` using `Content-Type: multipart/form-data` to `/v1/datafiles`
-
-## View a file by UID
-> Response
-
-```
-HTTP/1.1 302 Found
-Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
-```
-
-`GET /v1/datafiles/:uid`
 
 # <a name="jobs"></a> Jobs
 Jobs are the core of the Dispatch experience. The job object includes the service location, customer information, description, and other details needed so the technician can get the work done.
@@ -1047,11 +888,11 @@ For rejecting, the job will move into "rejected" status and it will become read-
 
 ```json
 {
-  "title": "Fix the Toilet",
-  "description": "The toilet is **clogged**.",
-  "service_type": "PLB",
+  "title": "Service Air Conditioner",
+  "description": "The unit is buzzing and moves no air.",
+  "service_type": "hvac",
   "address": {
-    "street_1": "1234 Test Avenue",
+    "street_1": "1 Some Pl.",
     "city": "Boston",
     "state": "MA",
     "postal_code": "02115",
@@ -1069,11 +910,11 @@ For rejecting, the job will move into "rejected" status and it will become read-
 {
   "job": {
     "id": 1,
-    "title": "Fix the Toilet",
-    "description": "The toilet is **clogged**.",
-    "service_type": "PLB",
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
     "address": {
-      "street_1": "1234 Test Avenue",
+      "street_1": "1 Some Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02115",
@@ -1084,13 +925,13 @@ For rejecting, the job will move into "rejected" status and it will become read-
     "customer_id": 10,
     "customer": {
       "id": 10,
-      "first_name": "Joe",
-      "last_name": "Shmo",
+      "first_name": "Jane",
+      "last_name": "Doe",
       "external_ids": ["AAA123"],
-      "email": "joe.shmo@gmail.com",
+      "email": "jane.doe@gmail.com",
       "phone_numbers": [
         {
-          "number": "+15555555555",
+          "number": "+1645551212",
           "type": "mobile",
           "primary": true
         }
@@ -1102,17 +943,17 @@ For rejecting, the job will move into "rejected" status and it will become read-
 
 `POST /v3/jobs`
 
-## Create a Job + related records
+## Create a Job With Related records
 
 > Request
 
 ```json
 {
-  "title": "Fix the Toilet",
-  "description": "The toilet is **clogged**.",
-  "service_type": "PLB",
+  "title": "Service Air Conditioner",
+  "description": "The unit is buzzing and moves no air.",
+  "service_type": "hvac",
   "address": {
-    "street_1": "1234 Test Avenue",
+    "street_1": "1 Some Pl.",
     "city": "Boston",
     "state": "MA",
     "postal_code": "02115",
@@ -1133,14 +974,14 @@ For rejecting, the job will move into "rejected" status and it will become read-
         "type": "work"
       }
     ],
-    "first_name": "Joe",
-    "last_name": "Shmo",
+    "first_name": "Jane",
+    "last_name": "Doe",
     "external_ids": ["AAA123"]
   },
   "organization": {
-    "name": "Joe's Plumbing",
+    "name": "Jane's Plumbing",
     "address": {
-      "street_1": "555 Test Avenue",
+      "street_1": "555 Another Pl.",
       "street_2": "Unit 5",
       "city": "Boston",
       "state": "MA",
@@ -1148,9 +989,25 @@ For rejecting, the job will move into "rejected" status and it will become read-
       "timezone": "America/New_York"
     },
     "phone_number": "+15551234567",
-    "email": "joe@joesplumbing.com",
+    "email": "jane@janesplumbing.com",
     "external_ids": ["AAA123"]
-  }
+  },
+  "equipment_descriptions": [
+    {
+      "manufacturer": "Acme", 
+      "model_number": "500", 
+      "serial_number": "01024"
+    }
+  ],
+  "marketing_attributions": [
+    {
+      "content": "bingo",
+      "campaign": "mamba",
+      "source": "orca",
+      "term": "glitter",
+      "media": "twitter"
+    }
+  ]
 }
 ```
 
@@ -1160,11 +1017,11 @@ For rejecting, the job will move into "rejected" status and it will become read-
 {
   "job": {
     "id": 1,
-    "title": "Fix the Toilet",
-    "description": "The toilet is **clogged**.",
-    "service_type": "PLB",
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
     "address": {
-      "street_1": "1234 Test Avenue",
+      "street_1": "1 Some Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02115",
@@ -1175,13 +1032,13 @@ For rejecting, the job will move into "rejected" status and it will become read-
     "customer_id": 10,
     "customer": {
       "id": 10,
-      "first_name": "Joe",
-      "last_name": "Shmo",
+      "first_name": "Jane",
+      "last_name": "Doe",
       "external_ids": ["AAA123"],
-      "email": "joe.shmo@gmail.com",
+      "email": "jane.doe@gmail.com",
       "phone_numbers": [
         {
-          "number": "+15555555555",
+          "number": "+1645551212",
           "type": "mobile",
           "primary": true
         }
@@ -1284,7 +1141,7 @@ status_eq | Show jobs in a certain status
 status_in | Show jobs in a group of statuses
 status_not_eq | Show jobs that are not in a certain status
 
-## View a Single Job
+## Get a Job
 
 > Response
 
@@ -1292,11 +1149,11 @@ status_not_eq | Show jobs that are not in a certain status
 {
   "job": {
     "id": 1,
-    "title": "Fix the Toilet",
-    "description": "The toilet is **clogged**.",
-    "service_type": "PLB",
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
     "address": {
-      "street_1": "1234 Test Avenue",
+      "street_1": "1 Some Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02115",
@@ -1307,18 +1164,25 @@ status_not_eq | Show jobs that are not in a certain status
     "customer_id": 10,
     "customer": {
       "id": 10,
-      "first_name": "Joe",
-      "last_name": "Shmo",
+      "first_name": "Jane",
+      "last_name": "Doe",
       "external_ids": ["AAA123"],
-      "email": "joe.shmo@gmail.com",
+      "email": "jane.doe@gmail.com",
       "phone_numbers": [
         {
-          "number": "+15555555555",
+          "number": "+1645551212",
           "type": "mobile",
           "primary": true
         }
       ]
-    }
+    },
+    "equipment_descriptions": [
+      {
+        "manufacturer": "Acme", 
+        "model_number": "500", 
+        "serial_number": "01024"
+      }
+    ]
   }
 }
 ```
@@ -1341,11 +1205,11 @@ status_not_eq | Show jobs that are not in a certain status
 {
   "job": {
     "id": 1,
-    "title": "Fix the Toilet",
-    "description": "The toilet is **clogged**.",
-    "service_type": "PLB",
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
     "address": {
-      "street_1": "1234 Test Avenue",
+      "street_1": "1 Some Pl.",
       "city": "Boston",
       "state": "MA",
       "postal_code": "02115",
@@ -1356,13 +1220,13 @@ status_not_eq | Show jobs that are not in a certain status
     "customer_id": 10,
     "customer": {
       "id": 10,
-      "first_name": "Joe",
-      "last_name": "Shmo",
+      "first_name": "Jane",
+      "last_name": "Doe",
       "external_ids": ["AAA123"],
-      "email": "joe.shmo@gmail.com",
+      "email": "jane.doe@gmail.com",
       "phone_numbers": [
         {
-          "number": "+15555555555",
+          "number": "+1645551212",
           "type": "mobile",
           "primary": true
         }
@@ -1375,6 +1239,57 @@ status_not_eq | Show jobs that are not in a certain status
 `PATCH /v3/jobs/:id`
 
 <aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
+
+## Get Marketing Attributions
+
+> Response
+
+```json
+{
+  "job": {
+    "id": 1,
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
+    "address": {
+      "street_1": "1 Some Pl.",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "customer": {
+      "id": 10,
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "external_ids": ["AAA123"],
+      "email": "jane.doe@gmail.com",
+      "phone_numbers": [
+        {
+          "number": "+1645551212",
+          "type": "mobile",
+          "primary": true
+        }
+      ]
+    },
+    "marketing_attributions": [
+      {
+        "content": "bingo",
+        "campaign": "mamba",
+        "source": "orca",
+        "term": "glitter",
+        "media": "twitter"
+      }
+    ]
+  }
+}
+```
+
+`GET /v3/jobs/:id?include=marketing_attributions`
+
 
 ## Contacts
 > Schema
@@ -1389,7 +1304,7 @@ status_not_eq | Show jobs that are not in a certain status
       "primary": true,
       "relationship": "Landlord",
       "address": {
-        "street_1": "1234 Test Avenue",
+        "street_1": "1 Some Pl.",
         "city": "Boston",
         "state": "MA",
         "postal_code": "02115",
@@ -1398,7 +1313,7 @@ status_not_eq | Show jobs that are not in a certain status
       "contact_methods": [
         {
           "method": "phone",
-          "value": "+15555555555",
+          "value": "+1645551212",
           "notify": true
         },
         {
@@ -1444,11 +1359,11 @@ notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't
 
 ```json
 {
-  "title": "Fix the Toilet",
-  "description": "The toilet is **clogged**.",
-  "service_type": "PLB",
+  "title": "Service Air Conditioner",
+  "description": "The unit is buzzing and moves no air.",
+  "service_type": "hvac",
   "address": {
-    "street_1": "1234 Test Avenue",
+    "street_1": "1 Some Pl.",
     "city": "Boston",
     "state": "MA",
     "postal_code": "02115",
@@ -1505,13 +1420,13 @@ notify | boolean | Y | Y | If true, we'll send notifications. If fales, we won't
     "job": {
         "id": 1,
         "organization_id": 1368,
-        "title": "Fix the Toilet",
+        "title": "Service Air Conditioner",
         "status": "offered",
-        "description": "The toilet is **clogged**.",
+        "description": "The unit is buzzing and moves no air.",
         "service_type": "plb",
         "customer_id": 123,
         "address": {
-            "street_1": "1234 Test Avenue",
+            "street_1": "1 Some Pl.",
             "street_2": null,
             "postal_code": "02115",
             "city": "Boston",
@@ -1646,7 +1561,7 @@ To list all the contacts associated with a particular job, perform a GET request
       "primary": true,
       "relationship": "Landlord",
       "address": {
-        "street_1": "1234 Test Avenue",
+        "street_1": "1 Some Pl.",
         "city": "Boston",
         "state": "MA",
         "postal_code": "02115",
@@ -1683,7 +1598,7 @@ To update all the contacts on a job (edit, remove or add), you can PATCH the con
   "primary": true,
   "relationship": "Landlord",
   "address": {
-    "street_1": "1234 Test Avenue",
+    "street_1": "1 Some Pl.",
     "city": "Boston",
     "state": "MA",
     "postal_code": "02115",
@@ -1778,9 +1693,9 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
 
 ```json
 {
-  "name": "Joe's Plumbing",
+  "name": "Jane's Plumbing",
   "address": {
-    "street_1": "555 Test Avenue",
+    "street_1": "555 Another Pl.",
     "street_2": "Unit 5",
     "city": "Boston",
     "state": "MA",
@@ -1788,7 +1703,7 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
     "timezone": "America/New_York"
   },
   "phone_number": "+15551234567",
-  "email": "joe@joesplumbing.com",
+  "email": "jane@janesplumbing.com",
   "external_ids": ["AAA123"]
 }
 ```
@@ -1799,9 +1714,9 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
 {
   "organization": {
     "id": 123,
-    "name": "Joe's Plumbing",
+    "name": "Jane's Plumbing",
     "address": {
-      "street_1": "555 Test Avenue",
+      "street_1": "555 Another Pl.",
       "street_2": "Unit 5",
       "city": "Boston",
       "state": "MA",
@@ -1809,7 +1724,7 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
       "timezone": "America/New_York"
     },
     "phone_number": "+15551234567",
-    "email": "joe@joesplumbing.com",
+    "email": "jane@janesplumbing.com",
     "external_ids": ["AAA123"]
   }
 }
@@ -1851,9 +1766,9 @@ external_ids_contains | Show organizations with a certain external ID
 {
   "organization": {
     "id": 123,
-    "name": "Joe's Plumbing",
+    "name": "Jane's Plumbing",
     "address": {
-      "street_1": "555 Test Avenue",
+      "street_1": "555 Another Pl.",
       "street_2": "Unit 5",
       "city": "Boston",
       "state": "MA",
@@ -1861,7 +1776,7 @@ external_ids_contains | Show organizations with a certain external ID
       "timezone": "America/New_York"
     },
     "phone_number": "+15551234567",
-    "email": "joe@joesplumbing.com",
+    "email": "jane@janesplumbing.com",
     "external_ids": ["AAA123"]
   }
 }
@@ -1885,9 +1800,9 @@ external_ids_contains | Show organizations with a certain external ID
 {
   "organization": {
     "id": 123,
-    "name": "Joe's Plumbing",
+    "name": "Jane's Plumbing",
     "address": {
-      "street_1": "555 Test Avenue",
+      "street_1": "555 Another Pl.",
       "street_2": "Unit 5",
       "city": "Boston",
       "state": "MA",
@@ -1895,7 +1810,7 @@ external_ids_contains | Show organizations with a certain external ID
       "timezone": "America/New_York"
     },
     "phone_number": "+15557826394",
-    "email": "joe@joesplumbing.com",
+    "email": "jane@janesplumbing.com",
     "external_ids": ["AAA123"]
   }
 }
@@ -2035,7 +1950,7 @@ password | string | N | Y | User's password. Only used for creation and updating
   "last_name": "the Technician",
   "roles": ["technician"],
   "phone_number": "+15551234567",
-  "email": "jim@joesplumbing.com",
+  "email": "jim@janesplumbing.com",
   "password": "supersecretpassword"
 }
 ```
@@ -2051,7 +1966,7 @@ password | string | N | Y | User's password. Only used for creation and updating
     "last_name": "the Technician",
     "roles": ["technician"],
     "phone_number": "+15551234567",
-    "email": "jim@joesplumbing.com"
+    "email": "jim@janesplumbing.com"
   }
 }
 ```
@@ -2100,7 +2015,7 @@ organization_id_eq | Search for users in a specific organization
     "last_name": "the Technician",
     "roles": ["technician"],
     "phone_number": "+15551234567",
-    "email": "jim@joesplumbing.com"
+    "email": "jim@janesplumbing.com"
   }
 }
 ```
@@ -2128,7 +2043,7 @@ organization_id_eq | Search for users in a specific organization
     "last_name": "the Technician",
     "roles": ["technician"],
     "phone_number": "+15551234567",
-    "email": "jim@joesplumbing.com"
+    "email": "jim@janesplumbing.com"
   }
 }
 ```
@@ -2150,4 +2065,164 @@ Common scenarios for using this feature are:
 ## Reactivate a User
 
 `POST /v3/users/:id/restore`
+# <a name="work-orders"></a> Work Orders
+Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball". 
+
+You can **create**, **update**, and **cancel** work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.
+
+## Work Order Object
+
+```json
+{
+  "title": "hvac 123: Service Air Conditioner",
+  "description": "## Job Info\n* Dog attacked the last guy",
+  "service_type": "hvac",
+  "orchestration": "direct_offer",
+  "external_id": "AAA123",
+  "location": {
+    "street_1": "1 Some Pl.",
+    "street_2": "Apt 2",
+    "city": "Boston",
+    "state": "MA",
+    "postal_code": "02115",
+    "timezone": "America/New_York"
+  },
+  "appointment_windows": [
+    {
+      "start_time": "2017-01-01T05:00:00Z",
+      "end_time": "2017-01-01T07:00:00Z"
+    },
+    {
+      "start_time": "2017-01-01T11:00:00Z",
+      "end_time": "2017-01-01T13:00:00Z"
+    }
+  ],
+  "contacts": [
+    {
+      "first_name": "Testy",
+      "last_name": "McGee",
+      "company_name": "Widgets, Inc.",
+      "external_id": "BBB456",
+      "primary": true,
+      "notes": "This person is really nice",
+      "phone_numbers": [
+        {
+          "label": "mobile",
+          "value": "+15551234567",
+          "preferred": true
+        }
+      ],
+      "email_addresses": [
+        {
+          "label": "work",
+          "value": "testy.mcgee@widgets.com",
+          "preferred": true
+        }
+      ]
+    }
+  ],
+  "organizations": [
+    {
+      "name": "Jane's Plumbing",
+      "address": {
+        "street_1": "5555 Test Street",
+        "city": "Boston",
+        "state": "MA",
+        "postal_code": "02114",
+        "timezone": "America/New_York"
+      },
+      "phone_number": "+15558889999",
+      "email": "jane@janesplumbing.com",
+      "external_id": "CCC789"
+    }
+  ]
+}
+```
+
+attribute | type | notes
+--------- | ---- | -----
+title | `string` | required
+description | `string` | markdown is supported
+service_type | `string` | Type of service to be performed
+brand_id | `integer` | Optionally assign to a [brand](#brands) within your account. <br/>This is the brand's ID in the Dispatch system.
+orchestration | `enum<string>` | See [orchestration algorithms](#orchestration-algorithms)
+external_id | `string` | ID for the work order in your system. See [external ids](#external-ids)
+location | `Location` | Location of the work. [Location entity schema](#location-schema)
+appointment_windows | `array<AppointmentWindow>` | Optionally provide appointment windows for the <br/>organization to choose from. <br/>[AppointmentWindow entity schema](#appointment-window-schema)
+contacts | `array<Contact>` | List of contacts for the work order. [Contact entity schema](#contact-schema)
+organizations | `array<Organization>` | List of organizations to send/offer the work to. <br/>Note that in "direct_*" orchestration only a single <br />organization is permitted. [Organization entity schema](#organization-schema)
+
+## <a name="orchestration-algorithms"></a>Orchestration Algorithms
+
+Algorithm | Description
+--------- | -----------
+direct_offer | Offer the job to a single organization. Job starts in "offered" status.
+direct_assign | Assign the job to a single organization. Job starts in "unscheduled" status.
+round_robin | **Coming Soon!**
+jump_ball | **Coming Soon!**
+
+## Location Entity <a name="location-schema"></a>
+Locations are not business objects in our system, but are attributes on several of our core business objects. 
+
+Currently Dispatch only supports locations in the US and Canada.
+
+attribute | type | notes
+--------- | ---- | -----
+street_1 | `string` | required
+street_2 | `string` |
+city | `string` | required
+state | `enum<string>` | two-character abbreviation for the state. 
+postal_code | `string` | 5-digit US or 6-character Canadian postal code
+timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
+external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
+
+## Appointment Window Entity <a name="appointment-window-schema"></a>
+
+attribute | type | notes
+--------- | ---- | -----
+start_time | `string` | ISO8601 timestamp
+end_time | `string` | ISO8601 timestamp
+
+# <a name="files-photos"></a> Files and Photos
+You can upload photos and other files to share with service providers and customers using our Files API. 
+
+<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
+
+
+Files can be accessed at the `/v1/datafiles` endpoint in the Files API.
+
+## <a name="upload-photo"></a>Uploading a file
+> Request
+
+```curl
+curl -H "Authorization: Bearer <token>" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
+
+```
+
+> Response
+
+```json
+{
+  "datafile": {
+    "bucket_id": null,
+    "created_at": "2017-07-19T01:42:48Z",
+    "filename": "test.png",
+    "mime_type": "image/png",
+    "name": "",
+    "uid": "fe9194b3-3cc2-4862-af52-d8b59f7dd062"
+  }
+}
+```
+
+`POST` using `Content-Type: multipart/form-data` to `/v1/datafiles`
+
+## View a file by UID
+> Response
+
+```
+HTTP/1.1 302 Found
+Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
+```
+
+`GET /v1/datafiles/:uid`
 
