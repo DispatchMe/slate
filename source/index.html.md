@@ -51,6 +51,7 @@ Entity | Description
 [Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed.
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
+[JobEquipmentDescriptions](#job-equipment-descriptions) | A list of job equipment descriptions described by the source of work and providing enough information to start the job [job](#job).
 [MarketingAttributions](#marketing-attributions) | A list of marketing attributions associated with a [job](#job).
 [Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Files & Photos](#files-photos) | The files and photos associated with a [job](#jobs).
@@ -512,7 +513,7 @@ This will cancel the underlying job and any appointments.
   "duration": -1,
   "job": {
     "title": "Fix the Sink",
-    "description": "Dripping faucet..",
+    "description": "Dripping faucet.",
     "service_type": "hvac",
     "external_id": "AAA123",
     "address": {
@@ -836,14 +837,17 @@ Attribute | Type | Required | Updatable | Description
 title | string | Y | Y |
 description | string | N | Y | Additional details for the job. Supports [markdown](https://daringfireball.net/projects/markdown/syntax)
 service_type | string | N | Y | Type of service, e.g. "plumbing"
+customer_id | int | Y | Y | ID of the customer object.
+organization_id | int | Y | N | ID of the assigned organization
 external_ids | array&laquo;string&raquo; | N | N | Your ID(s) for this job. See [external-ids](#external-ids)
 address | [Location](#location-schema) | Y | Y | [Location](#location-schema) of the job.
 brand_id | int | N | N | Optional ID for the [brand](#brands)
 source_id | int | N | N | ID of the source, if the job came from a job source. Will be `null` if the job is a retail job created by the organization.
-customer_id | int | Y | Y | ID of the customer object.
 contacts | array&laquo;object&raquo; | N | Y | Contacts to be notified about this job
-organization_id | int | Y | N | ID of the assigned organization
-service_fee | float | N | Y | Fee the customer owes for service
+equipment_descriptions | array&laquo;object&raquo; | N | Y | [Job Equipment Descriptions](#job-equipment-descriptions) associated with the job.
+marketing_attributions | array&laquo;object&raquo; | N | Y | [Marketing Attributions](#marketing-attributions) associated with the job.
+service_fee | float | N | Y | Fee the customer owes the warranty company or other source of work for service.
+service_fee_precollected | boolean | N | Y | Indicates whether the fee owed by the customer was collected by the warranty company or other source of work prior to the job being scheduled.  
 status | string | Y | Y | Status of the job. See [job statuses](#job-statuses)
 status_message | string| N | Y | Optional qualifier for the current status
 
@@ -996,7 +1000,9 @@ For rejecting, the job will move into "rejected" status and it will become read-
     {
       "manufacturer": "Acme", 
       "model_number": "500", 
-      "serial_number": "01024"
+      "serial_number": "01024",
+      "installation_date": "2017-10-21T00:00:00Z", 
+      "equipment_type": "hvac"      
     }
   ],
   "marketing_attributions": [
@@ -1240,7 +1246,110 @@ status_not_eq | Show jobs that are not in a certain status
 
 <aside class="notice">Remember, to move a job from "offered" status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
 
-## Get Marketing Attributions
+## Job Equipment Descriptions
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+manufacturer | string | N | Y | The equipment manufacturer
+model_number | string | N | Y | The equipment model number
+serial_number | string | N | Y | The equipment serial number
+equipment_type | string | N | Y | The equipment serial number
+installation_date | date | N | Y | The equipment installation date
+
+Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It's possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location. 
+
+```json
+{
+  "job": {
+    "id": 1,
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
+    "address": {
+      "street_1": "1 Some Pl.",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "customer": {
+      "id": 10,
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "external_ids": ["AAA123"],
+      "email": "jane.doe@gmail.com",
+      "phone_numbers": [
+        {
+          "number": "+1645551212",
+          "type": "mobile",
+          "primary": true
+        }
+      ]
+    },
+    "equipment_descriptions": [
+      {
+        "manufacturer": "Acme", 
+        "model_number": "500", 
+        "serial_number": "01024",
+        "installation_date": "2017-10-21T00:00:00Z", 
+        "equipment_type": "hvac"      
+      }
+    ],
+  }
+}
+```
+## Marketing Attributions
+
+Marketing attributions can be provided in any job POST. Since they are not present in the default job payload, separate GET needed to see them in the created or updated job.
+
+Attribute | Type | Required | Updatable | Description
+--------- | ---- | -------- | --------- | -----------
+content | string | N | Y | Any user-defined marketing attribution text
+campaign | string | N | Y | The user-defined name of a marketing campaign 
+source | string | N | Y | The user-defined source of the marketing attribution 
+term | string | N | Y | The term used in the marketing materials 
+media | string | N | Y | The media used in the marketing materials 
+
+`POST /v3/jobs/`
+
+> Request
+
+```json
+{
+  "job": {
+    "title": "Service Air Conditioner",
+    "description": "The unit is buzzing and moves no air.",
+    "service_type": "hvac",
+    "address": {
+      "street_1": "1 Some Pl.",
+      "city": "Boston",
+      "state": "MA",
+      "postal_code": "02115",
+      "timezone": "America/New_York"
+    },
+    "organization_id": 254,
+    "status": "offered",
+    "customer_id": 10,
+    "marketing_attributions": [
+      {
+        "content": "bingo",
+        "campaign": "mamba",
+        "source": "orca",
+        "term": "glitter",
+        "media": "twitter"
+      }
+    ]
+  }
+}
+```
+ 
+### Get Marketing Attributions
+
+Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET. 
+
+`GET /v3/jobs/:id?include=marketing_attributions`
 
 > Response
 
@@ -1287,9 +1396,6 @@ status_not_eq | Show jobs that are not in a certain status
   }
 }
 ```
-
-`GET /v3/jobs/:id?include=marketing_attributions`
-
 
 ## Contacts
 > Schema
