@@ -51,7 +51,7 @@ Entity | Description
 [Survey Response](#survey-responses) | Surveys are sent out to customers when an appointment or job is completed.
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
-[MarketingAttributions](#marketing-attributions) | A list of marketing attributions associated with a [job](#job).
+[MarketingAttributions](#get-marketing-attributions) | A list of marketing attributions associated with a [job](#job).
 [Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Files & Photos](#files-photos) | The files and photos associated with a [job](#jobs).
 
@@ -512,7 +512,7 @@ This will cancel the underlying job and any appointments.
   "duration": -1,
   "job": {
     "title": "Fix the Sink",
-    "description": "Dripping faucet..",
+    "description": "Dripping faucet.",
     "service_type": "hvac",
     "external_id": "AAA123",
     "address": {
@@ -843,7 +843,8 @@ source_id | int | N | N | ID of the source, if the job came from a job source. W
 customer_id | int | Y | Y | ID of the customer object.
 contacts | array&laquo;object&raquo; | N | Y | Contacts to be notified about this job
 organization_id | int | Y | N | ID of the assigned organization
-service_fee | float | N | Y | Fee the customer owes for service
+service_fee | float | N | Y | Fee the customer owes the warranty company or other source of work for service.
+service_fee_precollected | boolean | N | Y | Indicates whether the fee owed by the customer was collected by the warranty company or other source of work prior to the job being scheduled.  
 status | string | Y | Y | Status of the job. See [job statuses](#job-statuses)
 status_message | string| N | Y | Optional qualifier for the current status
 
@@ -996,7 +997,9 @@ For rejecting, the job will move into "rejected" status and it will become read-
     {
       "manufacturer": "Acme", 
       "model_number": "500", 
-      "serial_number": "01024"
+      "serial_number": "01024",
+      "installation_date": "2017-10-21T00:00:00Z", 
+      "equipment_type": "hvac"      
     }
   ],
   "marketing_attributions": [
