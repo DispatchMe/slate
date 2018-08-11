@@ -2008,51 +2008,49 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </tr>
 </tbody></table>
 
-<p>Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It&rsquo;s possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description associated with a job is a separate record, used to inform other equipment records, and should be considered the source of truth for the job, but not the complete source of truth for equipment at a customer location. 
-<code class="prettyprint">json
-{
-  &quot;job&quot;: {
-    &quot;id&quot;: 1,
-    &quot;title&quot;: &quot;Service Air Conditioner&quot;,
-    &quot;description&quot;: &quot;The unit is buzzing and moves no air.&quot;,
-    &quot;service_type&quot;: &quot;hvac&quot;,
-    &quot;address&quot;: {
-      &quot;street_1&quot;: &quot;1 Some Pl.&quot;,
-      &quot;city&quot;: &quot;Boston&quot;,
-      &quot;state&quot;: &quot;MA&quot;,
-      &quot;postal_code&quot;: &quot;02115&quot;,
-      &quot;timezone&quot;: &quot;America/New_York&quot;
-    },
-    &quot;organization_id&quot;: 254,
-    &quot;status&quot;: &quot;offered&quot;,
-    &quot;customer_id&quot;: 10,
-    &quot;customer&quot;: {
-      &quot;id&quot;: 10,
-      &quot;first_name&quot;: &quot;Jane&quot;,
-      &quot;last_name&quot;: &quot;Doe&quot;,
-      &quot;external_ids&quot;: [&quot;AAA123&quot;],
-      &quot;email&quot;: &quot;jane.doe@gmail.com&quot;,
-      &quot;phone_numbers&quot;: [
-        {
-          &quot;number&quot;: &quot;+1645551212&quot;,
-          &quot;type&quot;: &quot;mobile&quot;,
-          &quot;primary&quot;: true
-        }
-      ]
-    },
-    &quot;equipment_descriptions&quot;: [
-      {
-        &quot;manufacturer&quot;: &quot;Acme&quot;, 
-        &quot;model_number&quot;: &quot;500&quot;, 
-        &quot;serial_number&quot;: &quot;01024&quot;,
-        &quot;installation_date&quot;: &quot;2017-10-21T00:00:00Z&quot;, 
-        &quot;equipment_type&quot;: &quot;hvac&quot;      
-      }
-    ],
-  }
-}
-</code></p>
-
+<p>Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It&rsquo;s possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description associated with a job is a separate record, used to inform other equipment records, and should be considered the source of truth for the job, but not the complete source of truth for equipment at a customer location. </p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">      
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+  </span><span class="err">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <h2 id="marketing-attributions">Marketing Attributions</h2>
 
 <p>Marketing attributions can be provided in any job POST. Since they are not present in the default job payload, separate GET needed to see them in the created or updated job.</p>
