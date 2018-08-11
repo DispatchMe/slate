@@ -157,10 +157,6 @@
 </tr>
 </thead><tbody>
 <tr>
-<td><a href="#work-orders">Work Order</a></td>
-<td>An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.</td>
-</tr>
-<tr>
 <td><a href="#jobs">Job</a></td>
 <td>A single body of work for a <a href="#customers">customer</a>, assigned to an <a href="#organization">organization</a>.</td>
 </tr>
@@ -191,6 +187,18 @@
 <tr>
 <td><a href="#brands">Brand</a></td>
 <td>You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.</td>
+</tr>
+<tr>
+<td><a href="#get-marketing-attributions">MarketingAttributions</a></td>
+<td>A list of marketing attributions associated with a <a href="#job">job</a>.</td>
+</tr>
+<tr>
+<td><a href="#work-orders">Work Order</a></td>
+<td>An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.</td>
+</tr>
+<tr>
+<td><a href="#files-photos">Files &amp; Photos</a></td>
+<td>The files and photos associated with a <a href="#jobs">job</a>.</td>
 </tr>
 </tbody></table>
 
@@ -277,7 +285,7 @@
 
 <p><code class="prettyprint">POST /v3/oauth/token</code></p>
 
-<h2 id="refreshing-your-token">Refreshing your Token</h2>
+<h2 id="refresh-a-token">Refresh A Token</h2>
 
 <blockquote>
 <p>Request:</p>
@@ -649,234 +657,6 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <p><code class="prettyprint">DELETE /v3/brands/:id</code></p>
 
-<h1 id="work-orders"><a name="work-orders"></a> Work Orders</h1>
-
-<p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;. </p>
-
-<p>You can <strong>create</strong>, <strong>update</strong>, and <strong>cancel</strong> work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.</p>
-
-<h2 id="work-order-object">Work Order Object</h2>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB 123: Fix the Toilet"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Job Info\n* Dog attacked the last guy"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"orchestration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct_offer"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Apt 2"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nt">"appointment_windows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T05:00:00Z"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T11:00:00Z"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Testy"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"McGee"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"company_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Widgets, Inc."</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This person is really nice"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nt">"email_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testy.mcgee@widgets.com"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Street"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558889999"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<table><thead>
-<tr>
-<th>attribute</th>
-<th>type</th>
-<th>notes</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>title</td>
-<td><code class="prettyprint">string</code></td>
-<td>required</td>
-</tr>
-<tr>
-<td>description</td>
-<td><code class="prettyprint">string</code></td>
-<td>markdown is supported</td>
-</tr>
-<tr>
-<td>service_type</td>
-<td><code class="prettyprint">string</code></td>
-<td>Type of service to be performed</td>
-</tr>
-<tr>
-<td>brand_id</td>
-<td><code class="prettyprint">integer</code></td>
-<td>Optionally assign to a <a href="#brands">brand</a> within your account. <br/>This is the brand&rsquo;s ID in the Dispatch system.</td>
-</tr>
-<tr>
-<td>orchestration</td>
-<td><code class="prettyprint">enum&lt;string&gt;</code></td>
-<td>See <a href="#orchestration-algorithms">orchestration algorithms</a></td>
-</tr>
-<tr>
-<td>external_id</td>
-<td><code class="prettyprint">string</code></td>
-<td>ID for the work order in your system. See <a href="#external-ids">external ids</a></td>
-</tr>
-<tr>
-<td>location</td>
-<td><code class="prettyprint">Location</code></td>
-<td>Location of the work. <a href="#location-schema">Location entity schema</a></td>
-</tr>
-<tr>
-<td>appointment_windows</td>
-<td><code class="prettyprint">array&lt;AppointmentWindow&gt;</code></td>
-<td>Optionally provide appointment windows for the <br/>organization to choose from. <br/><a href="#appointment-window-schema">AppointmentWindow entity schema</a></td>
-</tr>
-<tr>
-<td>contacts</td>
-<td><code class="prettyprint">array&lt;Contact&gt;</code></td>
-<td>List of contacts for the work order. <a href="#contact-schema">Contact entity schema</a></td>
-</tr>
-<tr>
-<td>organizations</td>
-<td><code class="prettyprint">array&lt;Organization&gt;</code></td>
-<td>List of organizations to send/offer the work to. <br/>Note that in &ldquo;direct_*&rdquo; orchestration only a single <br />organization is permitted. <a href="#organization-schema">Organization entity schema</a></td>
-</tr>
-</tbody></table>
-
-<h2 id="orchestration-algorithms"><a name="orchestration-algorithms"></a>Orchestration Algorithms</h2>
-
-<table><thead>
-<tr>
-<th>Algorithm</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>direct_offer</td>
-<td>Offer the job to a single organization. Job starts in &ldquo;offered&rdquo; status.</td>
-</tr>
-<tr>
-<td>direct_assign</td>
-<td>Assign the job to a single organization. Job starts in &ldquo;unscheduled&rdquo; status.</td>
-</tr>
-<tr>
-<td>round_robin</td>
-<td><strong>Coming Soon!</strong></td>
-</tr>
-<tr>
-<td>jump_ball</td>
-<td><strong>Coming Soon!</strong></td>
-</tr>
-</tbody></table>
-
-<h2 id="location-entity">Location Entity <a name="location-schema"></a></h2>
-
-<p>Locations are not business objects in our system, but are attributes on several of our core business objects. </p>
-
-<p>Currently Dispatch only supports locations in the US and Canada.</p>
-
-<table><thead>
-<tr>
-<th>attribute</th>
-<th>type</th>
-<th>notes</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>street_1</td>
-<td><code class="prettyprint">string</code></td>
-<td>required</td>
-</tr>
-<tr>
-<td>street_2</td>
-<td><code class="prettyprint">string</code></td>
-<td></td>
-</tr>
-<tr>
-<td>city</td>
-<td><code class="prettyprint">string</code></td>
-<td>required</td>
-</tr>
-<tr>
-<td>state</td>
-<td><code class="prettyprint">enum&lt;string&gt;</code></td>
-<td>two-character abbreviation for the state.</td>
-</tr>
-<tr>
-<td>postal_code</td>
-<td><code class="prettyprint">string</code></td>
-<td>5-digit US or 6-character Canadian postal code</td>
-</tr>
-<tr>
-<td>timezone</td>
-<td><code class="prettyprint">enum&lt;string&gt;</code></td>
-<td>Timezone in <a href="https://www.iana.org/time-zones">IANA</a> format. <br/>If not provided we will attempt to find the timezone from the provided postal code.</td>
-</tr>
-<tr>
-<td>external_id</td>
-<td><code class="prettyprint">string</code></td>
-<td>Your system&rsquo;s IDs for the location <br/>See <a href="#external-ids">external ids</a></td>
-</tr>
-</tbody></table>
-
-<h2 id="appointment-window-entity">Appointment Window Entity <a name="appointment-window-schema"></a></h2>
-
-<table><thead>
-<tr>
-<th>attribute</th>
-<th>type</th>
-<th>notes</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>start_time</td>
-<td><code class="prettyprint">string</code></td>
-<td>ISO8601 timestamp</td>
-</tr>
-<tr>
-<td>end_time</td>
-<td><code class="prettyprint">string</code></td>
-<td>ISO8601 timestamp</td>
-</tr>
-</tbody></table>
-
 <h2 id="organization-entity">Organization Entity <a name="organization-schema"></a></h2>
 
 <p>We will attempt to look up the organization in our system using, in order:</p>
@@ -1075,11 +855,11 @@ Careful! If you delete a brand then all jobs currently within that brand will us
   </span><span class="nt">"duration"</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Sink"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The sink needs fixing."</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dripping faucet."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="w">
@@ -1090,9 +870,9 @@ Careful! If you delete a brand then all jobs currently within that brand will us
     </span><span class="nt">"window_end_time"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="p">,</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@email.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
@@ -1107,7 +887,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
     </span><span class="p">],</span><span class="w">
     </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"billing_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Another Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="w">
@@ -1123,7 +903,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
         </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@jimsplumbing.com"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558887777"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Test Avenue"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Another Pl."</span><span class="p">,</span><span class="w">
           </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02113"</span><span class="w">
@@ -1139,11 +919,11 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"orchestration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct_offer"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Sink"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The sink needs fixing"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dripping faucet."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="w">
@@ -1164,7 +944,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
       </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jim's Plumbing"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9876 Another Pl."</span><span class="p">,</span><span class="w">
         </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02113"</span><span class="w">
@@ -1175,11 +955,11 @@ Careful! If you delete a brand then all jobs currently within that brand will us
   </span><span class="p">],</span><span class="w">
   </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="nt">"billing_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Another Pl."</span><span class="p">,</span><span class="w">
         </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="w">
@@ -1188,7 +968,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
       </span><span class="nt">"email_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
           </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@email.com"</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@email.com"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">],</span><span class="w">
       </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -1488,8 +1268,8 @@ Careful! If you delete a brand then all jobs currently within that brand will us
       </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -1513,8 +1293,8 @@ Careful! If you delete a brand then all jobs currently within that brand will us
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1553,7 +1333,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Changed"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1602,48 +1382,6 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 <h2 id="delete-a-customer">Delete a Customer</h2>
 
 <p><code class="prettyprint">DELETE /v3/customers/:id</code></p>
-
-<h1 id="files-and-photos"><a name="files-photos"></a> Files and Photos</h1>
-
-<p>You can upload photos and other files to share with service providers and customers using our Files API. </p>
-
-<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
-
-<p>Files can be accessed at the <code class="prettyprint">/v1/datafiles</code> endpoint in the Files API.</p>
-
-<h2 id="uploading-a-file"><a name="upload-photo"></a>Uploading a file</h2>
-
-<blockquote>
-<p>Request</p>
-</blockquote>
-<pre class="highlight plaintext"><code>curl -H "Authorization: Bearer &lt;token&gt;" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
-
-</code></pre>
-<blockquote>
-<p>Response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"datafile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"bucket_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-07-19T01:42:48Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.png"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"mime_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image/png"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fe9194b3-3cc2-4862-af52-d8b59f7dd062"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><code class="prettyprint">POST</code> using <code class="prettyprint">Content-Type: multipart/form-data</code> to <code class="prettyprint">/v1/datafiles</code></p>
-
-<h2 id="view-a-file-by-uid">View a file by UID</h2>
-
-<blockquote>
-<p>Response</p>
-</blockquote>
-<pre class="highlight plaintext"><code>HTTP/1.1 302 Found
-Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
-</code></pre>
-<p><code class="prettyprint">GET /v1/datafiles/:uid</code></p>
 
 <h1 id="jobs"><a name="jobs"></a> Jobs</h1>
 
@@ -1735,7 +1473,14 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <td>float</td>
 <td>N</td>
 <td>Y</td>
-<td>Fee the customer owes for service</td>
+<td>Fee the customer owes the warranty company or other source of work for service.</td>
+</tr>
+<tr>
+<td>service_fee_precollected</td>
+<td>boolean</td>
+<td>N</td>
+<td>Y</td>
+<td>Indicates whether the fee owed by the customer was collected by the warranty company or other source of work prior to the job being scheduled.</td>
 </tr>
 <tr>
 <td>status</td>
@@ -1816,11 +1561,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <p>Request</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -1837,11 +1582,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -1852,13 +1597,13 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
     </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
-      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -1869,17 +1614,17 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 </span></code></pre>
 <p><code class="prettyprint">POST /v3/jobs</code></p>
 
-<h2 id="create-a-job-related-records">Create a Job + related records</h2>
+<h2 id="create-a-job-with-related-records">Create a Job With Related records</h2>
 
 <blockquote>
 <p>Request</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -1900,14 +1645,14 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Another Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
@@ -1915,9 +1660,27 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
+      </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+      </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w"> 
+      </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">      
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"marketing_attributions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bingo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"campaign"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mamba"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orca"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"term"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glitter"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"media"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <blockquote>
@@ -1926,11 +1689,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -1941,13 +1704,13 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
     </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
-      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -2083,7 +1846,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 </tr>
 </tbody></table>
 
-<h2 id="view-a-single-job">View a Single Job</h2>
+<h2 id="get-a-job">Get a Job</h2>
 
 <blockquote>
 <p>Response</p>
@@ -2091,11 +1854,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2106,18 +1869,25 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
     </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
-      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2138,11 +1908,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2153,13 +1923,13 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
     </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shmo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
-      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe.shmo@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -2171,6 +1941,55 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <p><code class="prettyprint">PATCH /v3/jobs/:id</code></p>
 
 <aside class="notice">Remember, to move a job from &ldquo;offered&rdquo; status, you need to <a href="#accept-reject-behalf">accept or reject it on behalf of the orgnanization</a> if they cannot do so in our application.</aside>
+
+<h2 id="get-marketing-attributions">Get Marketing Attributions</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"customer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane.doe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"marketing_attributions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bingo"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"campaign"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mamba"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orca"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"term"</span><span class="p">:</span><span class="w"> </span><span class="s2">"glitter"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"media"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">GET /v3/jobs/:id?include=marketing_attributions</code></p>
 
 <h2 id="contacts">Contacts</h2>
 
@@ -2186,7 +2005,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="nt">"relationship"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Landlord"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
         </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2195,7 +2014,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"contact_methods"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
           </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"phone"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15555555555"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+1645551212"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"notify"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
         </span><span class="p">},</span><span class="w">
         </span><span class="p">{</span><span class="w">
@@ -2307,11 +2126,11 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <p>Request</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLB"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2367,13 +2186,13 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
         </span><span class="nt">"organization_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1368</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fix the Toilet"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Service Air Conditioner"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"offered"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The toilet is **clogged**."</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The unit is buzzing and moves no air."</span><span class="p">,</span><span class="w">
         </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plb"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
         </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
             </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
             </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
@@ -2506,7 +2325,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
       </span><span class="nt">"relationship"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Landlord"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
         </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2543,7 +2362,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
   </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="nt">"relationship"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Landlord"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
@@ -2712,9 +2531,9 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <p>Request</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Another Pl."</span><span class="p">,</span><span class="w">
     </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
@@ -2722,7 +2541,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -2732,9 +2551,9 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Another Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
@@ -2742,7 +2561,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2792,9 +2611,9 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Another Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
@@ -2802,7 +2621,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2824,9 +2643,9 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe's Plumbing"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Test Avenue"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"555 Another Pl."</span><span class="p">,</span><span class="w">
       </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unit 5"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
@@ -2834,7 +2653,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
       </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15557826394"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe@joesplumbing.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"external_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"AAA123"</span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3079,7 +2898,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
   </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
   </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@janesplumbing.com"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"supersecretpassword"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3094,7 +2913,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@janesplumbing.com"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3154,7 +2973,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@janesplumbing.com"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3180,7 +2999,7 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
     </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the Technician"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"technician"</span><span class="p">],</span><span class="w">
     </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@joesplumbing.com"</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jim@janesplumbing.com"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -3204,6 +3023,276 @@ Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862
 <h2 id="reactivate-a-user">Reactivate a User</h2>
 
 <p><code class="prettyprint">POST /v3/users/:id/restore</code></p>
+
+<h1 id="work-orders"><a name="work-orders"></a> Work Orders</h1>
+
+<p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;. </p>
+
+<p>You can <strong>create</strong>, <strong>update</strong>, and <strong>cancel</strong> work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.</p>
+
+<h2 id="work-order-object">Work Order Object</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac 123: Service Air Conditioner"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"## Job Info\n* Dog attacked the last guy"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"service_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"orchestration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"direct_offer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA123"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Some Pl."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"street_2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Apt 2"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02115"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"appointment_windows"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T05:00:00Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T07:00:00Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"start_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T11:00:00Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-01T13:00:00Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"contacts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Testy"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"McGee"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"company_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Widgets, Inc."</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BBB456"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This person is really nice"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"phone_numbers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15551234567"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"email_addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testy.mcgee@widgets.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"preferred"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane's Plumbing"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"street_1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5555 Test Street"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"02114"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"phone_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15558889999"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jane@janesplumbing.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CCC789"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>title</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code class="prettyprint">string</code></td>
+<td>markdown is supported</td>
+</tr>
+<tr>
+<td>service_type</td>
+<td><code class="prettyprint">string</code></td>
+<td>Type of service to be performed</td>
+</tr>
+<tr>
+<td>brand_id</td>
+<td><code class="prettyprint">integer</code></td>
+<td>Optionally assign to a <a href="#brands">brand</a> within your account. <br/>This is the brand&rsquo;s ID in the Dispatch system.</td>
+</tr>
+<tr>
+<td>orchestration</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>See <a href="#orchestration-algorithms">orchestration algorithms</a></td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>ID for the work order in your system. See <a href="#external-ids">external ids</a></td>
+</tr>
+<tr>
+<td>location</td>
+<td><code class="prettyprint">Location</code></td>
+<td>Location of the work. <a href="#location-schema">Location entity schema</a></td>
+</tr>
+<tr>
+<td>appointment_windows</td>
+<td><code class="prettyprint">array&lt;AppointmentWindow&gt;</code></td>
+<td>Optionally provide appointment windows for the <br/>organization to choose from. <br/><a href="#appointment-window-schema">AppointmentWindow entity schema</a></td>
+</tr>
+<tr>
+<td>contacts</td>
+<td><code class="prettyprint">array&lt;Contact&gt;</code></td>
+<td>List of contacts for the work order. <a href="#contact-schema">Contact entity schema</a></td>
+</tr>
+<tr>
+<td>organizations</td>
+<td><code class="prettyprint">array&lt;Organization&gt;</code></td>
+<td>List of organizations to send/offer the work to. <br/>Note that in &ldquo;direct_*&rdquo; orchestration only a single <br />organization is permitted. <a href="#organization-schema">Organization entity schema</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="orchestration-algorithms"><a name="orchestration-algorithms"></a>Orchestration Algorithms</h2>
+
+<table><thead>
+<tr>
+<th>Algorithm</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>direct_offer</td>
+<td>Offer the job to a single organization. Job starts in &ldquo;offered&rdquo; status.</td>
+</tr>
+<tr>
+<td>direct_assign</td>
+<td>Assign the job to a single organization. Job starts in &ldquo;unscheduled&rdquo; status.</td>
+</tr>
+<tr>
+<td>round_robin</td>
+<td><strong>Coming Soon!</strong></td>
+</tr>
+<tr>
+<td>jump_ball</td>
+<td><strong>Coming Soon!</strong></td>
+</tr>
+</tbody></table>
+
+<h2 id="location-entity">Location Entity <a name="location-schema"></a></h2>
+
+<p>Locations are not business objects in our system, but are attributes on several of our core business objects. </p>
+
+<p>Currently Dispatch only supports locations in the US and Canada.</p>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>street_1</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>street_2</td>
+<td><code class="prettyprint">string</code></td>
+<td></td>
+</tr>
+<tr>
+<td>city</td>
+<td><code class="prettyprint">string</code></td>
+<td>required</td>
+</tr>
+<tr>
+<td>state</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>two-character abbreviation for the state.</td>
+</tr>
+<tr>
+<td>postal_code</td>
+<td><code class="prettyprint">string</code></td>
+<td>5-digit US or 6-character Canadian postal code</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td><code class="prettyprint">enum&lt;string&gt;</code></td>
+<td>Timezone in <a href="https://www.iana.org/time-zones">IANA</a> format. <br/>If not provided we will attempt to find the timezone from the provided postal code.</td>
+</tr>
+<tr>
+<td>external_id</td>
+<td><code class="prettyprint">string</code></td>
+<td>Your system&rsquo;s IDs for the location <br/>See <a href="#external-ids">external ids</a></td>
+</tr>
+</tbody></table>
+
+<h2 id="appointment-window-entity">Appointment Window Entity <a name="appointment-window-schema"></a></h2>
+
+<table><thead>
+<tr>
+<th>attribute</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start_time</td>
+<td><code class="prettyprint">string</code></td>
+<td>ISO8601 timestamp</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td><code class="prettyprint">string</code></td>
+<td>ISO8601 timestamp</td>
+</tr>
+</tbody></table>
+
+<h1 id="files-and-photos"><a name="files-photos"></a> Files and Photos</h1>
+
+<p>You can upload photos and other files to share with service providers and customers using our Files API. </p>
+
+<aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
+
+<p>Files can be accessed at the <code class="prettyprint">/v1/datafiles</code> endpoint in the Files API.</p>
+
+<h2 id="uploading-a-file"><a name="upload-photo"></a>Uploading a file</h2>
+
+<blockquote>
+<p>Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>curl -H "Authorization: Bearer &lt;token&gt;" -F file=@test.png https://files-api.dispatch.me/v1/datafiles
+
+</code></pre>
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"datafile"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"bucket_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-07-19T01:42:48Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"filename"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.png"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mime_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image/png"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"uid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fe9194b3-3cc2-4862-af52-d8b59f7dd062"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><code class="prettyprint">POST</code> using <code class="prettyprint">Content-Type: multipart/form-data</code> to <code class="prettyprint">/v1/datafiles</code></p>
+
+<h2 id="view-a-file-by-uid">View a file by UID</h2>
+
+<blockquote>
+<p>Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 302 Found
+Location: https://s3.amazonaws.com/dispatch_staging/datafiles/fe9194b3-3cc2-4862-af52-d8b59f7dd062/test.png
+</code></pre>
+<p><code class="prettyprint">GET /v1/datafiles/:uid</code></p>
 
           <h1 id="errors">Errors</h1>
 
