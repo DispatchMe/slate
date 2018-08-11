@@ -52,7 +52,7 @@ Entity | Description
 [Source](#sources) | Sources represent where the job information originated. If you are integrating as an organization, you can receive jobs from multiple sources.
 [Brand](#brands) | You can assign jobs to your brands to control the branding (logo, copy, etc) of the application, customer portal, and notifications.
 [JobEquipmentDescriptions](#job-equipment-descriptions) | A list of job equipment descriptions described by the source of work and providing enough information to start the job [job](#job).
-[MarketingAttributions](#get-marketing-attributions) | A list of marketing attributions associated with a [job](#job).
+[MarketingAttributions](#marketing-attributions) | A list of marketing attributions associated with a [job](#job).
 [Work Order](#work-orders) | An object containing all of the information to create jobs, customers, organizations, and appointments. We recommend using this unless you have a use case that requires individual access to the underlying objects.
 [Files & Photos](#files-photos) | The files and photos associated with a [job](#jobs).
 
@@ -1255,7 +1255,8 @@ serial_number | string | N | Y | The equipment serial number
 equipment_type | string | N | Y | The equipment serial number
 installation_date | date | N | Y | The equipment installation date
 
-Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It's possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description associated with a job is a separate record, used to inform other equipment records, and should be considered the source of truth for the job, but not the complete source of truth for equipment at a customer location. 
+Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It's possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location. 
+
 ```json
 {
   "job": {
@@ -1299,7 +1300,7 @@ Job equipment descriptions provide enough info about what is being serviced to s
   }
 }
 ```
-# Marketing Attributions
+## Marketing Attributions
 
 Marketing attributions can be provided in any job POST. Since they are not present in the default job payload, separate GET needed to see them in the created or updated job.
 
@@ -1344,7 +1345,7 @@ media | string | N | Y | The media used in the marketing materials
 }
 ```
  
-## Get Marketing Attributions
+### Get Marketing Attributions
 
 Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET. 
 
