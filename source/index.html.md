@@ -445,8 +445,8 @@ external_id | `string` | ID(s) for the contact in your system. See [external ids
 primary | `bool` | You must designate a single primary contact (set to `true`) <br/>per work order. This person will be able to log in to the customer  <br/> portal, suggest appointment windows, and provide feedback at <br/>the end of the appointment.
 notes | `string` |
 billing_address | `Location` | Optional billing address for this contact.
-email_addresses | `array<ContactMethod>` | List of email addresses for this contact. [Contact method schema](#contact-method-schema) 
-phone_numbers | `array<ContactMethod>` | List of phone numbers for this contact. [Contact method schema](#contact-method-schema) 
+email_addresses | `array<ContactMethod>` | List of email addresses for this contact. [Contact method schema](#contact-method-schema)
+phone_numbers | `array<ContactMethod>` | List of phone numbers for this contact. [Contact method schema](#contact-method-schema)
 
 ### Contact Method Entity <a name="contact-method-schema"></a>
 
@@ -669,7 +669,7 @@ job offer attribute | work order attribute | notes
 `customer.first_name` | `contacts[0].first_name` |
 `customer.last_name` | `contacts[0].last_name` |
 `customer.email` | `contacts[0].email_addresses.$.value` | Set this contact method to `preferred:true`
-`customer.phone_numbers.$.number` | `contacts[0].phone_numbers.$.value` | 
+`customer.phone_numbers.$.number` | `contacts[0].phone_numbers.$.value` |
 `customer.phone_numbers.$.type` | `contacts[0].phone_numbers.$.label` |
 `customer.phone_numbers.$.primary` | `contacts[0].phone_numbers.$.preferred` |
 `customer.external_id` | `contacts[0].external_id` |
@@ -847,7 +847,7 @@ contacts | array&laquo;object&raquo; | N | Y | Contacts to be notified about thi
 equipment_descriptions | array&laquo;object&raquo; | N | Y | [Job Equipment Descriptions](#job-equipment-descriptions) associated with the job.
 marketing_attributions | array&laquo;object&raquo; | N | Y | [Marketing Attributions](#marketing-attributions) associated with the job.
 service_fee | float | N | Y | Fee the customer owes the warranty company or other source of work for service.
-service_fee_precollected | boolean | N | Y | Indicates whether the fee owed by the customer was collected by the warranty company or other source of work prior to the job being scheduled.  
+service_fee_precollected | boolean | N | Y | Indicates whether the fee owed by the customer was collected by the warranty company or other source of work prior to the job being scheduled.
 status | string | Y | Y | Status of the job. See [job statuses](#job-statuses)
 status_message | string| N | Y | Optional qualifier for the current status
 
@@ -998,11 +998,11 @@ For rejecting, the job will move into "rejected" status and it will become read-
   },
   "equipment_descriptions": [
     {
-      "manufacturer": "Acme", 
-      "model_number": "500", 
+      "manufacturer": "Acme",
+      "model_number": "500",
       "serial_number": "01024",
-      "installation_date": "2017-10-21T00:00:00Z", 
-      "equipment_type": "hvac"      
+      "installation_date": "2017-10-21T00:00:00Z",
+      "equipment_type": "hvac"
     }
   ],
   "marketing_attributions": [
@@ -1184,8 +1184,8 @@ status_not_eq | Show jobs that are not in a certain status
     },
     "equipment_descriptions": [
       {
-        "manufacturer": "Acme", 
-        "model_number": "500", 
+        "manufacturer": "Acme",
+        "model_number": "500",
         "serial_number": "01024"
       }
     ]
@@ -1255,7 +1255,7 @@ serial_number | string | N | Y | The equipment serial number
 equipment_type | string | N | Y | The equipment serial number
 installation_date | date | N | Y | The equipment installation date
 
-Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It's possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location. 
+Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It's possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location.
 
 ```json
 {
@@ -1290,11 +1290,11 @@ Job equipment descriptions provide enough info about what is being serviced to s
     },
     "equipment_descriptions": [
       {
-        "manufacturer": "Acme", 
-        "model_number": "500", 
+        "manufacturer": "Acme",
+        "model_number": "500",
         "serial_number": "01024",
-        "installation_date": "2017-10-21T00:00:00Z", 
-        "equipment_type": "hvac"      
+        "installation_date": "2017-10-21T00:00:00Z",
+        "equipment_type": "hvac"
       }
     ],
   }
@@ -1307,10 +1307,10 @@ Marketing attributions can be provided in any job POST. Since they are not prese
 Attribute | Type | Required | Updatable | Description
 --------- | ---- | -------- | --------- | -----------
 content | string | N | Y | Any user-defined marketing attribution text
-campaign | string | N | Y | The user-defined name of a marketing campaign 
-source | string | N | Y | The user-defined source of the marketing attribution 
-term | string | N | Y | The term used in the marketing materials 
-media | string | N | Y | The media used in the marketing materials 
+campaign | string | N | Y | The user-defined name of a marketing campaign
+source | string | N | Y | The user-defined source of the marketing attribution
+term | string | N | Y | The term used in the marketing materials
+media | string | N | Y | The media used in the marketing materials
 
 `POST /v3/jobs/`
 
@@ -1344,10 +1344,10 @@ media | string | N | Y | The media used in the marketing materials
   }
 }
 ```
- 
+
 ### Get Marketing Attributions
 
-Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET. 
+Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET.
 
 `GET /v3/jobs/:id?include=marketing_attributions`
 
@@ -1793,6 +1793,20 @@ phone_number | string | N | Y | Phone number in [RFC3966 format](https://www.iet
 email | string | Y | Y |
 logo_token | string | N | Y | Token for organization's logo in our [file system](#files-photos)
 
+## Deduplication
+
+Whenever an attempt to create an organization via a POST request is made, we attempt to match it to an existing one. If that match is successful, the request will not result in the creation of an organization, and instead will receive a response containing the data of the matched organization. Currently, the recommended way to programmatically determine whether you have received an existing or new organization in the response is to check how recent the `created_at` timestamp in the response is.
+
+* This matching occurs when at least 2 out of the 4 following fields have been matched:
+  * `name`
+  * `address`
+  * `phone_number`
+  * `email`
+
+### Bypassing Deduplication
+
+When creating an organization via `POST /v3/organizations`, if you provide an additional `boolean` parameter on the organization payload called `always_create` and set it to `true`, the POST request will always result in a new organization's creation. This will ignore all functionality we have by default surrounding deduplication, meaning, matching your request body to an existing organization in the database.
+
 ## Create an Organization
 
 > Request
@@ -1840,6 +1854,7 @@ logo_token | string | N | Y | Token for organization's logo in our [file system]
 
 ### Create an initial user for organization
 When creating an organization via `POST /v3/organizations`, if you provide an additional `boolean` parameter on the organization payload called `create_user` and set it to `true`, a [user](#users) will be created with both the "dispatcher" and "technician" roles using the `email` attribute on the organization. While that user will not be able to log in directly (we won't make up a password), he or she can start receiving emails for jobs and start interacting them in the Dispatch mobile or desktop application. From there, the new user can set a mobile number and password to be able to log in normally.
+
 
 ## List Organizations
 
@@ -2172,7 +2187,7 @@ Common scenarios for using this feature are:
 
 `POST /v3/users/:id/restore`
 # <a name="work-orders"></a> Work Orders
-Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball". 
+Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a "factory" of sorts to create all of the underlying objects and apply any sort of orchestration rules like "round robin" and "jump ball".
 
 You can **create**, **update**, and **cancel** work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.
 
@@ -2268,7 +2283,7 @@ round_robin | **Coming Soon!**
 jump_ball | **Coming Soon!**
 
 ## Location Entity <a name="location-schema"></a>
-Locations are not business objects in our system, but are attributes on several of our core business objects. 
+Locations are not business objects in our system, but are attributes on several of our core business objects.
 
 Currently Dispatch only supports locations in the US and Canada.
 
@@ -2277,7 +2292,7 @@ attribute | type | notes
 street_1 | `string` | required
 street_2 | `string` |
 city | `string` | required
-state | `enum<string>` | two-character abbreviation for the state. 
+state | `enum<string>` | two-character abbreviation for the state.
 postal_code | `string` | 5-digit US or 6-character Canadian postal code
 timezone | `enum<string>` | Timezone in [IANA](https://www.iana.org/time-zones) format. <br/>If not provided we will attempt to find the timezone from the provided postal code.
 external_id | `string` | Your system's IDs for the location <br/>See [external ids](#external-ids)
@@ -2290,7 +2305,7 @@ start_time | `string` | ISO8601 timestamp
 end_time | `string` | ISO8601 timestamp
 
 # <a name="files-photos"></a> Files and Photos
-You can upload photos and other files to share with service providers and customers using our Files API. 
+You can upload photos and other files to share with service providers and customers using our Files API.
 
 <aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
 
