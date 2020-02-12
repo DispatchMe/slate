@@ -714,6 +714,25 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </tr>
 </tbody></table>
 
+<h2 id="deduplication">Deduplication</h2>
+
+<p>Whenever an attempt to create an organization via a POST request is made, we attempt to match it to an existing one. If that match is successful, the request will not result in the creation of an organization, and instead will receive a response containing the data of the matched organization. Currently, the recommended way to programmatically determine whether you have received an existing or new organization in the response is to check how recent the <code class="prettyprint">created_at</code> timestamp in the response is.</p>
+
+<ul>
+<li>This matching occurs when at least 2 out of the 4 following fields have been matched:
+
+<ul>
+<li><code class="prettyprint">name</code></li>
+<li><code class="prettyprint">address</code></li>
+<li><code class="prettyprint">phone_number</code></li>
+<li><code class="prettyprint">email</code></li>
+</ul></li>
+</ul>
+
+<h3 id="bypassing-deduplication">Bypassing Deduplication</h3>
+
+<p>When creating an organization via <code class="prettyprint">POST /v3/organizations</code>, if you provide an additional <code class="prettyprint">boolean</code> parameter on the organization payload called <code class="prettyprint">always_create</code> and set it to <code class="prettyprint">true</code>, the POST request will always result in a new organization&rsquo;s creation. This will ignore all functionality we have by default surrounding deduplication, meaning, matching your request body to an existing organization in the database.</p>
+
 <h2 id="contact-entity">Contact Entity <a name="contact-schema"></a></h2>
 
 <p>A contact is any person who the organization may need to get in touch with over the lifecycle of the work order.</p>
