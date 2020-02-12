@@ -432,6 +432,22 @@ phone_number | `string` | Phone number in [RFC3966 format](https://www.ietf.org/
 external_id | `string` | ID for the organization in your system. [external ids](#external-ids)
 id | `int` | ID for the organization in Dispatch. Provide if you know it, otherwise omit.
 
+
+## Deduplication
+
+Whenever an attempt to create an organization via a POST request is made, we attempt to match it to an existing one. If that match is successful, the request will not result in the creation of an organization, and instead will receive a response containing the data of the matched organization. Currently, the recommended way to programmatically determine whether you have received an existing or new organization in the response is to check how recent the `created_at` timestamp in the response is.
+
+* This matching occurs when at least 2 out of the 4 following fields have been matched:
+  * `name`
+  * `address`
+  * `phone_number`
+  * `email`
+
+### Bypassing Deduplication
+
+When creating an organization via `POST /v3/organizations`, if you provide an additional `boolean` parameter on the organization payload called `always_create` and set it to `true`, the POST request will always result in a new organization's creation. This will ignore all functionality we have by default surrounding deduplication, meaning, matching your request body to an existing organization in the database.
+
+
 ## Contact Entity <a name="contact-schema"></a>
 
 A contact is any person who the organization may need to get in touch with over the lifecycle of the work order.
