@@ -714,25 +714,6 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </tr>
 </tbody></table>
 
-<h2 id="deduplication">Deduplication</h2>
-
-<p>Whenever an attempt to create an organization via a POST request is made, we attempt to match it to an existing one. If that match is successful, the request will not result in the creation of an organization, and instead will receive a response containing the data of the matched organization. Currently, the recommended way to programmatically determine whether you have received an existing or new organization in the response is to check how recent the <code class="prettyprint">created_at</code> timestamp in the response is.</p>
-
-<ul>
-<li>This matching occurs when at least 2 out of the 4 following fields have been matched:
-
-<ul>
-<li><code class="prettyprint">name</code></li>
-<li><code class="prettyprint">address</code></li>
-<li><code class="prettyprint">phone_number</code></li>
-<li><code class="prettyprint">email</code></li>
-</ul></li>
-</ul>
-
-<h3 id="bypassing-deduplication">Bypassing Deduplication</h3>
-
-<p>When creating an organization via <code class="prettyprint">POST /v3/organizations</code>, if you provide an additional <code class="prettyprint">boolean</code> parameter on the organization payload called <code class="prettyprint">always_create</code> and set it to <code class="prettyprint">true</code>, the POST request will always result in a new organization&rsquo;s creation. This will ignore all functionality we have by default surrounding deduplication, meaning, matching your request body to an existing organization in the database.</p>
-
 <h2 id="contact-entity">Contact Entity <a name="contact-schema"></a></h2>
 
 <p>A contact is any person who the organization may need to get in touch with over the lifecycle of the work order.</p>
@@ -1702,11 +1683,11 @@ Careful! If you delete a brand then all jobs currently within that brand will us
   </span><span class="p">},</span><span class="w">
   </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
-      </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+      </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w"> 
-      </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">      
+      </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="nt">"marketing_attributions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -1920,8 +1901,8 @@ Careful! If you delete a brand then all jobs currently within that brand will us
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
-        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
@@ -2027,7 +2008,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </tr>
 </tbody></table>
 
-<p>Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It&rsquo;s possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location. </p>
+<p>Job equipment descriptions provide enough info about what is being serviced to start the job. The info is usually in its final form at the time the job is created. It&rsquo;s possible to update the records with a PATCH request, which is a complete replacement if anything has changed. The job equipment description is meaningful only in the context of a unit of work, and while it is used to inform other equipment records, it should only be considered a source of truth as the person that described that job understood it, and not a complete source of truth for equipment a service group maintains at a customer location.</p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"job"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
@@ -2060,11 +2041,11 @@ Careful! If you delete a brand then all jobs currently within that brand will us
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"equipment_descriptions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w"> 
-        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nt">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Acme"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"model_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"serial_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01024"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w"> 
-        </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">      
+        </span><span class="nt">"installation_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-10-21T00:00:00Z"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"equipment_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hvac"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
   </span><span class="err">}</span><span class="w">
@@ -2154,7 +2135,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 </span></code></pre>
 <h3 id="get-marketing-attributions">Get Marketing Attributions</h3>
 
-<p>Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET. </p>
+<p>Marketing attributions are not returned with every request. An include parameter is used if you want them to be added to the job data returned by a GET.</p>
 
 <p><code class="prettyprint">GET /v3/jobs/:id?include=marketing_attributions</code></p>
 
@@ -2784,6 +2765,25 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <p>When creating an organization via <code class="prettyprint">POST /v3/organizations</code>, if you provide an additional <code class="prettyprint">boolean</code> parameter on the organization payload called <code class="prettyprint">create_user</code> and set it to <code class="prettyprint">true</code>, a <a href="#users">user</a> will be created with both the &ldquo;dispatcher&rdquo; and &ldquo;technician&rdquo; roles using the <code class="prettyprint">email</code> attribute on the organization. While that user will not be able to log in directly (we won&rsquo;t make up a password), he or she can start receiving emails for jobs and start interacting them in the Dispatch mobile or desktop application. From there, the new user can set a mobile number and password to be able to log in normally.</p>
 
+<h3 id="deduplication">Deduplication</h3>
+
+<p>Whenever an attempt to create an organization via a POST request is made, we attempt to match it to an existing one. If that match is successful, the request will not result in the creation of an organization, and instead will receive a response containing the data of the matched organization. Currently, the recommended way to programmatically determine whether you have received an existing or new organization in the response is to check how recent the <code class="prettyprint">created_at</code> timestamp in the response is.</p>
+
+<ul>
+<li>This matching occurs when at least 2 out of the 4 following fields have been matched:
+
+<ul>
+<li><code class="prettyprint">name</code></li>
+<li><code class="prettyprint">address</code></li>
+<li><code class="prettyprint">phone_number</code></li>
+<li><code class="prettyprint">email</code></li>
+</ul></li>
+</ul>
+
+<h4 id="bypassing-deduplication">Bypassing Deduplication</h4>
+
+<p>When creating an organization via <code class="prettyprint">POST /v3/organizations</code>, if you provide an additional <code class="prettyprint">boolean</code> parameter on the organization payload called <code class="prettyprint">always_create</code> and set it to <code class="prettyprint">true</code>, the POST request will always result in a new organization&rsquo;s creation. This will ignore all functionality we have by default surrounding deduplication, meaning, matching your request body to an existing organization in the database.</p>
+
 <h2 id="list-organizations">List Organizations</h2>
 
 <blockquote>
@@ -3238,7 +3238,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <h1 id="work-orders"><a name="work-orders"></a> Work Orders</h1>
 
-<p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;. </p>
+<p>Work Orders represent all of the data needed to create an organization, job, customer, and (optionally) appointment in the Dispatch system. They are not business objects themselves, but rather used as a &ldquo;factory&rdquo; of sorts to create all of the underlying objects and apply any sort of orchestration rules like &ldquo;round robin&rdquo; and &ldquo;jump ball&rdquo;.</p>
 
 <p>You can <strong>create</strong>, <strong>update</strong>, and <strong>cancel</strong> work orders. When you do that, business objects in the Dispatch system are created or updated appropriately. This makes it easy for your system to send data to Dispatch without having to worry about the underlying objects. However, if you would like, you can still access those objects individually to check their status, etc.</p>
 
@@ -3395,7 +3395,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <h2 id="location-entity">Location Entity <a name="location-schema"></a></h2>
 
-<p>Locations are not business objects in our system, but are attributes on several of our core business objects. </p>
+<p>Locations are not business objects in our system, but are attributes on several of our core business objects.</p>
 
 <p>Currently Dispatch only supports locations in the US and Canada.</p>
 
@@ -3466,7 +3466,7 @@ Careful! If you delete a brand then all jobs currently within that brand will us
 
 <h1 id="files-and-photos"><a name="files-photos"></a> Files and Photos</h1>
 
-<p>You can upload photos and other files to share with service providers and customers using our Files API. </p>
+<p>You can upload photos and other files to share with service providers and customers using our Files API.</p>
 
 <aside class="info">Note that our Files API has a different URL than our core API. In production, this is https://files-api.dispatch.me, and in sandbox this is https://files-api-sandbox.dispatch.me</aside>
 
